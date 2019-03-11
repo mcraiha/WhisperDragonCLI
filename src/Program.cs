@@ -5,6 +5,8 @@ namespace WhisperDragonCLI
 {
 	class Program
 	{
+		private bool isFileOpen = false;
+
 		static void Main(string[] args)
 		{
 			Application.Init ();
