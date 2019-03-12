@@ -3,7 +3,7 @@ using Terminal.Gui;
 
 namespace WhisperDragonCLI
 {
-	public static class CreateNewDialog
+	public static class NewFileDialog
 	{
 		private static readonly int suggestedIterations = 100_000;
 		private static readonly string[] prfArray = new string[] {"SHA-512", "SHA-256"};
