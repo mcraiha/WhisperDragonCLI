@@ -6,22 +6,32 @@ namespace WhisperDragonCLI
 	class Program
 	{
 		private bool isFileOpen = false;
+		private bool isFileModified = false;
+
+		private string fullFilePath = "";
+
+		private string filename = "";
 
 		static void Main(string[] args)
 		{
 			Application.Init ();
 			var menu = new MenuBar (new MenuBarItem [] {
-				new MenuBarItem ("_File", new MenuItem [] {
-					new MenuItem("_New", "", () => 
+				new MenuBarItem("_File", new MenuItem [] {
+					new MenuItem("_New...", LocMan.Get("New CommonSecrets file..."), () => 
 					{
-						var createNew = CreateNewDialog.CreateNewFileDialog(() => Application.RequestStop(), () => Application.RequestStop()); 
+						var createNew = NewFileDialog.CreateNewFileDialog(() => Application.RequestStop(), () => Application.RequestStop()); 
 						Application.Run(createNew);
 					}),
-					new MenuItem("_Open", "", () => {}),
-					new MenuItem("_Save", "", () => {}),
-					new MenuItem("_Quit", "", () => { 
+					new MenuItem("_Open...", LocMan.Get("Open existing CommonSecrets file..."), () => {}),
+					new MenuItem("_Save", "Save CommonSecrets file", () => {}),
+					new MenuItem("Save As...", "Save CommonSecrets file as...", () => {}),
+					new MenuItem("_Quit", "Quit", () => { 
 						Application.RequestStop (); 
 					})
+				}),
+
+				new MenuBarItem("_Edit", new MenuItem[] {
+
 				}),
 			});
 
