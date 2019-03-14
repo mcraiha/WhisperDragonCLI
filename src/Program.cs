@@ -35,12 +35,14 @@ namespace WhisperDragonCLI
 				}),
 			});
 
-			var win = new Window ("Hello") {
+			var win = new Window("Hello") {
 				X = 0,
 				Y = 1,
 				Width = Dim.Fill (),
 				Height = Dim.Fill () - 1
 			};
+
+			LoginInformationsWindow.CreateLoginInformationsDialog(win);
 
 			// Add both menu and win in a single call
 			Application.Top.Add (menu, win);
