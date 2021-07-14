@@ -1,24 +1,21 @@
 using System;
 using Terminal.Gui;
+using NStack;
 
 namespace WhisperDragonCLI
 {
 	public static class NewFileDialog
 	{
 		private static readonly int suggestedIterations = 100_000;
-		private static readonly string[] prfArray = new string[] {"SHA-512", "SHA-256"};
+		private static readonly ustring[] prfArray = new ustring[] {"SHA-512", "SHA-256"};
 
 		public static Dialog CreateNewFileDialog(Action okAction, Action cancelAction)
 		{
-			var ok = new Button(3, 14, LocMan.Get("Ok")) 
-			{ 
-				Clicked = okAction
-			};
+			var ok = new Button(3, 14, LocMan.Get("Ok"));
+			ok.Clicked += () => { okAction.Invoke(); };
 
-			var cancel = new Button(10, 14, LocMan.Get("Cancel")) 
-			{
-				Clicked = cancelAction
-			};
+			var cancel = new Button(10, 14, LocMan.Get("Cancel")) ;
+			cancel.Clicked += () => { cancelAction.Invoke(); };
 
 			var dialog = new Dialog(LocMan.Get("Pbkdf2 settings"), 60, 20, ok, cancel);
 
