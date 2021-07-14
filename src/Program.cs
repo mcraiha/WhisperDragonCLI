@@ -42,7 +42,18 @@ namespace WhisperDragonCLI
 				Height = Dim.Fill () - 1
 			};
 
-			LoginInformationsWindow.CreateLoginInformationsDialog(win);
+			//LoginInformationsWindow.CreateLoginInformationsDialog(win);
+			TabView tabView = new TabView()
+			{
+				X = 0,
+				Y = 0,
+				Width = Dim.Fill (),
+				Height = Dim.Fill (1)
+			};
+			tabView.AddTab(new TabView.Tab("Login informations", LoginInformationsView.CreateView()), true);
+			tabView.AddTab(new TabView.Tab("Notes", new ListView()), false);
+			tabView.AddTab(new TabView.Tab("Files", new ListView()), false);
+			win.Add(tabView);
 
 			// Add both menu and win in a single call
 			Application.Top.Add (menu, win);
