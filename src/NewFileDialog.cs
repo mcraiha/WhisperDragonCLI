@@ -1,5 +1,6 @@
 using System;
 using Terminal.Gui;
+using Terminal.Gui.TextValidateProviders;
 using NStack;
 
 namespace WhisperDragonCLI
@@ -51,13 +52,15 @@ namespace WhisperDragonCLI
 			
 			var iterationsLabel = new Label(1, 11, LocMan.Get("How many iterations:"));
 
-			var iterationsAmount = new TextField (suggestedIterations.ToString()) 
+			var positiveNumbersOnlyProvider = new TextRegexProvider("^[1-9]+[0-9]*$") { ValidateOnInput = true };
+			var iterationsAmount = new TextValidateField(positiveNumbersOnlyProvider) 
 			{
 				X = 1, 
 				Y = 12,
 				Width = Dim.Fill(),
 				Height = 1
 			};
+			iterationsAmount.Text = suggestedIterations.ToString();
 
 
 			dialog.Add(enterPasswordLabel, passwordFirstTime, confirmPasswordLabel, passwordSecondTime, prfLabel, prfRadioSelection, iterationsLabel, iterationsAmount);
