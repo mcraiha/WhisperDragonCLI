@@ -1,5 +1,6 @@
 using System;
 using Terminal.Gui;
+using System.Collections.Generic;
 
 namespace WhisperDragonCLI
 {
@@ -24,7 +25,7 @@ namespace WhisperDragonCLI
 					}),
 					new MenuItem("_Open...", LocMan.Get("Open existing CommonSecrets file..."), () => OpenCommonSecretsFile()),
 					new MenuItem("_Save", "Save CommonSecrets file", () => {}),
-					new MenuItem("Save As...", "Save CommonSecrets file as...", () => {}),
+					new MenuItem("Save As...", "Save CommonSecrets file as...", () => SaveCommonSecretsFileAs()),
 					new MenuItem("_Close", "Close file", () => {}),
 					new MenuItem("_Quit", "Quit", () => { 
 						Application.RequestStop (); 
@@ -70,6 +71,37 @@ namespace WhisperDragonCLI
 
 			if (!d.Canceled) {
 				fullFilePath = d.FilePaths[0];
+			}
+		}
+
+		private static void SaveCommonSecretsFileAs()
+		{
+			var allowedFileExtensions = new List<string> () { ".json", ".xml" };
+			var sd = new SaveDialog ("Save file", "Choose the path where to save the file.", allowedFileExtensions);
+			//sd.FilePath = System.IO.Path.Combine (sd.FilePath.ToString (), Win.Title.ToString ());
+			Application.Run (sd);
+
+			if (!sd.Canceled) 
+			{
+				if (System.IO.File.Exists (sd.FilePath.ToString ())) 
+				{
+					if (MessageBox.Query ("Save File", "File already exists. Overwrite any way?", "No", "Ok") == 1) 
+					{
+						// Overwrite existing file
+					} 
+					else 
+					{
+						// Do nothing
+					}
+				} 
+				else 
+				{
+					// Create a new file
+				}
+			} 
+			else 
+			{
+				// Saving canceled
 			}
 		}
 	}
