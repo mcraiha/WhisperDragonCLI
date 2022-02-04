@@ -31,6 +31,18 @@ namespace WhisperDragonCLI
 
 			tableView.Table = dt;
 
+			/*tableView.MouseClick += (m) => {
+				m.MouseEvent.
+			};*/
+
+			tableView.KeyUp += (m) => {
+				if (m.KeyEvent.Key == Key.F5)
+				{
+					Clipboard.TrySetClipboardData((string)dt.Rows[tableView.SelectedRow]["URL"]);
+				}
+				
+			};
+
 			return tableView;
 		}
 
@@ -38,5 +50,7 @@ namespace WhisperDragonCLI
 		{
 			return new List<string>() { "Secure", "Title", "URL", "Email", "Username", "Password" };
 		}
+
+
 	}
 }
