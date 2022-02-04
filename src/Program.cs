@@ -25,6 +25,7 @@ namespace WhisperDragonCLI
 					new MenuItem("_Open...", LocMan.Get("Open existing CommonSecrets file..."), () => {}),
 					new MenuItem("_Save", "Save CommonSecrets file", () => {}),
 					new MenuItem("Save As...", "Save CommonSecrets file as...", () => {}),
+					new MenuItem("_Close", "Close file", () => {}),
 					new MenuItem("_Quit", "Quit", () => { 
 						Application.RequestStop (); 
 					})
