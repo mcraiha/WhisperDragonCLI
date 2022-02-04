@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using System.Data;
 using System.Collections.Generic;
 
 namespace WhisperDragonCLI
@@ -7,10 +8,35 @@ namespace WhisperDragonCLI
 	{
 		public static View CreateView()
 		{
-			List<string> stringList = new List<string>() { "some what long string", "and nice collections to show", "for users"};
+			var dt = new DataTable();
 
-			ListView listView = new ListView(new Rect(0, 1, 20, 10), stringList);
-			return listView;
+			foreach (string columnName in GetColumnNames())
+			{
+				dt.Columns.Add(columnName);
+			}
+
+			List<string> firstRow = new List<string>() { "Yes", "Fake service", "https://fakeservice.com", "sample@email.com", "Dragon", "gwWTY#¤&%36" };
+			dt.Rows.Add(firstRow.ToArray());
+
+			List<string> secondRow = new List<string>() { "No", "Fake mail", "https://fakemail.com", "sample@email.com", "Dragon", "Si0bSww5bYeKp7Rs" };
+			dt.Rows.Add(secondRow.ToArray());
+
+			TableView tableView = new TableView() 
+			{
+				X = 0,
+				Y = 0,
+				Width = Dim.Fill(),
+				Height = 10,
+			};
+
+			tableView.Table = dt;
+
+			return tableView;
+		}
+
+		public static List<string> GetColumnNames()
+		{
+			return new List<string>() { "Secure", "Title", "URL", "Email", "Username", "Password" };
 		}
 	}
 }
