@@ -8,9 +8,9 @@ namespace WhisperDragonCLI
 		private bool isFileOpen = false;
 		private bool isFileModified = false;
 
-		private string fullFilePath = "";
+		private static string fullFilePath = "";
 
-		private string filename = "";
+		private static string filename = "";
 
 		static void Main(string[] args)
 		{
@@ -22,7 +22,7 @@ namespace WhisperDragonCLI
 						var createNew = NewFileDialog.CreateNewFileDialog(() => Application.RequestStop(), () => Application.RequestStop()); 
 						Application.Run(createNew);
 					}),
-					new MenuItem("_Open...", LocMan.Get("Open existing CommonSecrets file..."), () => {}),
+					new MenuItem("_Open...", LocMan.Get("Open existing CommonSecrets file..."), () => OpenCommonSecretsFile()),
 					new MenuItem("_Save", "Save CommonSecrets file", () => {}),
 					new MenuItem("Save As...", "Save CommonSecrets file as...", () => {}),
 					new MenuItem("_Close", "Close file", () => {}),
@@ -61,6 +61,16 @@ namespace WhisperDragonCLI
 			// Add both menu and win in a single call
 			Application.Top.Add (menu, win);
 			Application.Run ();
+		}
+
+		private static void OpenCommonSecretsFile()
+		{
+			var d = new OpenDialog ("Open", "Open a CommonSecrets file") { AllowsMultipleSelection = false };
+			Application.Run (d);
+
+			if (!d.Canceled) {
+				fullFilePath = d.FilePaths[0];
+			}
 		}
 	}
 }
