@@ -35,6 +35,14 @@ namespace WhisperDragonCLI
 				new MenuBarItem("_Edit", new MenuItem[] {
 
 				}),
+
+				new MenuBarItem("_Tools", new MenuItem[] {
+					new MenuItem("_Generate Password...", LocMan.Get("Generate a new password...."), () => 
+					{
+						var createPasswordSelection = CreatePasswordSelectionView.CreateView(); 
+						Application.Run(createPasswordSelection);
+					}),
+				}),
 			});
 
 			var win = new Window("Hello") {
