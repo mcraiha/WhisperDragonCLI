@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace WhisperDragonCLI
 {
-	public static class PasswordGeneratorView
+	public static class PasswordGeneratorDialog
 	{
 		private static readonly List<char> upperCaseLatinLetters = new List<char>()
 		{
@@ -39,11 +39,14 @@ namespace WhisperDragonCLI
 		// Generated during runtime in ConstructEmojiList(), See https://en.wikipedia.org/wiki/Emoticons_(Unicode_block)
 		private static readonly List<string> emoticonsUnicodeBlock = new List<string>();
 
-		public static View CreateView()
+		public static Dialog CreateDialog(Action okAction)
 		{
 			PasswordGeneratorState state = new PasswordGeneratorState();
 
-			View returnValue = new View();
+			var ok = new Button(3, 14, LocMan.Get("Ok"));
+			ok.Clicked += () => { okAction.Invoke(); };
+
+			var dialog = new Dialog(LocMan.Get("🎲 Random Password Generator"), 60, 20, ok);
 
 			var passwordLengthLabel = new Label(1, 1, LocMan.Get("Password length:"));
 
@@ -51,15 +54,37 @@ namespace WhisperDragonCLI
 			var passwordLengthTextField = new TextValidateField(positiveNumbersOnlyProvider) 
 			{
 				X = 1, 
-				Y = 12,
-				Width = Dim.Fill(),
+				Y = 2,
+				Width = 4,
 				Height = 1
 			};
 			passwordLengthTextField.Text = state.PasswordLength.ToString();
 
-			returnValue.Add(passwordLengthTextField);
 
-			return returnValue;
+			var useUppercase = new CheckBox(1, 4, "Upper-case latin characters (e.g. A, C, K, Z)", state.IncludeUpperCaseLatinLetters);
+
+			var useLowercase = new CheckBox(1, 5, "Lower-case latin characters (e.g. a, c, k, z)", state.IncludeLowerCaseLatinLetters);
+
+			var useDigits = new CheckBox(1, 6, "Digits (e.g. 4, 6, 9)", state.IncludeDigits);
+
+			var useSpecialASCII = new CheckBox(1, 7, "Special characters ASCII", state.IncludeSpecialCharactersASCII);
+
+			var useBasicEmojis = new CheckBox(1, 8, "Basic emoji (e.g. 😊)", state.IncludeEmojis);
+
+
+			var generatedPasswordLabel = new Label(1, 10, LocMan.Get("Generated password:"));
+			var generatedPasswordField = new TextField("") 
+			{
+				ReadOnly = true,
+				X = 1, 
+				Y = 11,
+				Width = Dim.Fill(),
+				Height = 1
+			};
+
+			dialog.Add(passwordLengthLabel, passwordLengthTextField, useUppercase, useLowercase, useDigits, useSpecialASCII, useBasicEmojis, generatedPasswordLabel, generatedPasswordField);
+
+			return dialog;
 		}
 
 		private static void GenerateRandomPassword(PasswordGeneratorState state)
