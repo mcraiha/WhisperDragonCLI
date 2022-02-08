@@ -62,14 +62,19 @@ namespace WhisperDragonCLI
 
 
 			var useUppercase = new CheckBox(1, 4, "Upper-case latin characters (e.g. A, C, K, Z)", state.IncludeUpperCaseLatinLetters);
+			useUppercase.Toggled += (bool old) => { state.IncludeUpperCaseLatinLetters = !old; };
 
 			var useLowercase = new CheckBox(1, 5, "Lower-case latin characters (e.g. a, c, k, z)", state.IncludeLowerCaseLatinLetters);
+			useLowercase.Toggled += (bool old) => { state.IncludeLowerCaseLatinLetters = !old; };
 
 			var useDigits = new CheckBox(1, 6, "Digits (e.g. 4, 6, 9)", state.IncludeDigits);
+			useDigits.Toggled += (bool old) => { state.IncludeDigits = !old; };
 
 			var useSpecialASCII = new CheckBox(1, 7, "Special characters ASCII", state.IncludeSpecialCharactersASCII);
+			useSpecialASCII.Toggled += (bool old) => { state.IncludeSpecialCharactersASCII = !old; };
 
 			var useBasicEmojis = new CheckBox(1, 8, "Basic emoji (e.g. 😊)", state.IncludeEmojis);
+			useBasicEmojis.Toggled += (bool old) => { state.IncludeEmojis = !old; };
 
 
 			var generatedPasswordLabel = new Label(1, 10, LocMan.Get("Generated password:"));
@@ -82,7 +87,13 @@ namespace WhisperDragonCLI
 				Height = 1
 			};
 
-			dialog.Add(passwordLengthLabel, passwordLengthTextField, useUppercase, useLowercase, useDigits, useSpecialASCII, useBasicEmojis, generatedPasswordLabel, generatedPasswordField);
+
+			var copyToClipboardButton = new Button(3, 12, LocMan.Get("Copy to Clipboard"));
+
+			var generateButton = new Button(25, 12, LocMan.Get("Generate"));
+			generateButton.Clicked += () => { GenerateRandomPassword(state); generatedPasswordField.Text = state.GeneratedPassword; };
+
+			dialog.Add(passwordLengthLabel, passwordLengthTextField, useUppercase, useLowercase, useDigits, useSpecialASCII, useBasicEmojis, generatedPasswordLabel, generatedPasswordField, copyToClipboardButton, generateButton);
 
 			return dialog;
 		}
