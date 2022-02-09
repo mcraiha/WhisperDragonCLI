@@ -50,5 +50,10 @@ namespace WhisperDragonCLI
 				this.generatedPassword = value;
 			}
 		}
+
+		public string GetActualPassword()
+		{
+			return this.generatedPassword;
+		}
 	}
 }

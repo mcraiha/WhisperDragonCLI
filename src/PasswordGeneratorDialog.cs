@@ -89,9 +89,11 @@ namespace WhisperDragonCLI
 
 
 			var copyToClipboardButton = new Button(1, 12, LocMan.Get("Copy to Clipboard"));
+			copyToClipboardButton.Enabled = false;
+			copyToClipboardButton.Clicked += () => { Clipboard.TrySetClipboardData(state.GetActualPassword()); };
 
 			var generateButton = new Button(23, 12, LocMan.Get("Generate"));
-			generateButton.Clicked += () => { GenerateRandomPassword(state); generatedPasswordField.Text = state.GeneratedPassword; };
+			generateButton.Clicked += () => { GenerateRandomPassword(state); generatedPasswordField.Text = state.GeneratedPassword; copyToClipboardButton.Enabled = true; };
 
 			var visiblePassword = new CheckBox(23, 13, "Visible", state.VisiblePassword);
 			visiblePassword.Toggled += (bool old) => { state.VisiblePassword = !old; generatedPasswordField.Text = state.GeneratedPassword; };
