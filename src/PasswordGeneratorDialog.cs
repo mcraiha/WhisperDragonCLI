@@ -43,10 +43,10 @@ namespace WhisperDragonCLI
 		{
 			PasswordGeneratorState state = new PasswordGeneratorState();
 
-			var ok = new Button(3, 14, LocMan.Get("Ok"));
+			var ok = new Button(1, 14, LocMan.Get("Ok"));
 			ok.Clicked += () => { okAction.Invoke(); };
 
-			var dialog = new Dialog(LocMan.Get("🎲 Random Password Generator"), 60, 20, ok);
+			var dialog = new Dialog(LocMan.Get("🎲 Random Password Generator"), 60, 17, ok);
 
 			var passwordLengthLabel = new Label(1, 1, LocMan.Get("Password length:"));
 
@@ -88,12 +88,15 @@ namespace WhisperDragonCLI
 			};
 
 
-			var copyToClipboardButton = new Button(3, 12, LocMan.Get("Copy to Clipboard"));
+			var copyToClipboardButton = new Button(1, 12, LocMan.Get("Copy to Clipboard"));
 
-			var generateButton = new Button(25, 12, LocMan.Get("Generate"));
+			var generateButton = new Button(23, 12, LocMan.Get("Generate"));
 			generateButton.Clicked += () => { GenerateRandomPassword(state); generatedPasswordField.Text = state.GeneratedPassword; };
 
-			dialog.Add(passwordLengthLabel, passwordLengthTextField, useUppercase, useLowercase, useDigits, useSpecialASCII, useBasicEmojis, generatedPasswordLabel, generatedPasswordField, copyToClipboardButton, generateButton);
+			var visiblePassword = new CheckBox(23, 13, "Visible", state.VisiblePassword);
+			visiblePassword.Toggled += (bool old) => { state.VisiblePassword = !old; generatedPasswordField.Text = state.GeneratedPassword; };
+
+			dialog.Add(passwordLengthLabel, passwordLengthTextField, useUppercase, useLowercase, useDigits, useSpecialASCII, useBasicEmojis, generatedPasswordLabel, generatedPasswordField, copyToClipboardButton, generateButton, visiblePassword);
 
 			return dialog;
 		}
