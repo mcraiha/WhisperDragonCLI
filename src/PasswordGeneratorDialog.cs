@@ -31,11 +31,6 @@ namespace WhisperDragonCLI
 			'!', '"', '#', '$', '%', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'
 		};
 
-		private static readonly List<char> specialCharactersPronounceable = new List<char>()
-		{
-			'!', '#', '$', '%', '*', '+', '-', '.', '?', '@', '_',
-		};
-
 		// Generated during runtime in ConstructEmojiList(), See https://en.wikipedia.org/wiki/Emoticons_(Unicode_block)
 		private static readonly List<string> emoticonsUnicodeBlock = new List<string>();
 
