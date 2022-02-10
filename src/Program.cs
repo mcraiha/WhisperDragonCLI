@@ -37,10 +37,15 @@ namespace WhisperDragonCLI
 				}),
 
 				new MenuBarItem("_Tools", new MenuItem[] {
-					new MenuItem("_Generate Random Password...", LocMan.Get("Generate a new random password...."), () => 
+					new MenuItem("_Generate Random Password...", LocMan.Get("Generate a new random password..."), () => 
 					{
 						var createPasswordSelection = PasswordGeneratorDialog.CreateDialog(() => Application.RequestStop()); 
 						Application.Run(createPasswordSelection);
+					}),
+					new MenuItem("_Generate Pronounceable Password...", LocMan.Get("Generate a new pronounceable password..."), () => 
+					{
+						var createPronounceablePasswordSelection = PasswordGeneratorPronounceableDialog.CreateDialog(() => Application.RequestStop()); 
+						Application.Run(createPronounceablePasswordSelection);
 					}),
 				}),
 			});
