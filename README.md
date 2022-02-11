@@ -6,3 +6,12 @@ Written with C#, runs via Dotnet.
 
 **UNDER DEVELOPMENT**
 
+## How to run
+Move to **src** folder and execute following command
+```
+dotnet run
+```
+
+## Licenses
+
+All code files (*.cs) are under [Unlicense](https://unlicense.org/)
