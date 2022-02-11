@@ -66,7 +66,7 @@ namespace WhisperDragonCLI
 				Height = Dim.Fill (1)
 			};
 			tabView.AddTab(new TabView.Tab("Login informations", LoginInformationsView.CreateView()), true);
-			tabView.AddTab(new TabView.Tab("Notes", new ListView()), false);
+			tabView.AddTab(new TabView.Tab("Notes", NotesView.CreateView()), false);
 			tabView.AddTab(new TabView.Tab("Files", new ListView()), false);
 			tabView.AddTab(new TabView.Tab("Contacts", new ListView()), false);
 			tabView.AddTab(new TabView.Tab("Payment cards", new ListView()), false);
