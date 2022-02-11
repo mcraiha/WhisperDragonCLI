@@ -69,7 +69,7 @@ namespace WhisperDragonCLI
 			tabView.AddTab(new TabView.Tab("Notes", NotesView.CreateView()), false);
 			tabView.AddTab(new TabView.Tab("Files", FilesView.CreateView()), false);
 			tabView.AddTab(new TabView.Tab("Contacts", ContactsView.CreateView()), false);
-			tabView.AddTab(new TabView.Tab("Payment cards", new ListView()), false);
+			tabView.AddTab(new TabView.Tab("Payment cards", PaymentCardsView.CreateView()), false);
 			win.Add(tabView);
 
 			// Add both menu and win in a single call
