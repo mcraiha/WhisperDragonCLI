@@ -65,7 +65,7 @@ namespace WhisperDragonCLI
 				Width = Dim.Fill (),
 				Height = Dim.Fill (1)
 			};
-			tabView.AddTab(new TabView.Tab("Login informations", LoginInformationsView.CreateView()), true);
+			tabView.AddTab(new TabView.Tab("Login informations", LoginInformationsView.CreateView(GetTestLogins())), true);
 			tabView.AddTab(new TabView.Tab("Notes", NotesView.CreateView()), false);
 			tabView.AddTab(new TabView.Tab("Files", FilesView.CreateView()), false);
 			tabView.AddTab(new TabView.Tab("Contacts", ContactsView.CreateView()), false);
@@ -75,6 +75,39 @@ namespace WhisperDragonCLI
 			// Add both menu and win in a single call
 			Application.Top.Add (menu, win);
 			Application.Run ();
+		}
+
+		// Development related data (will be removed at some point)
+
+		private static List<LoginSimplified> GetTestLogins()
+		{
+			return new List<LoginSimplified>() 
+			{
+				new LoginSimplified() 
+				{
+					zeroBasedIndexNumber = 0,
+					IsSecure = true,
+					Title = "Fake service",
+					URL = "https://fakeservice.com",
+					Email = "dragon@example.com",
+					Username = "Dragon",
+					Password = "gwWTY#¤&%36",
+					Category = "Samples",
+					Tags = "Samples Demo",
+				},
+				new LoginSimplified() 
+				{
+					zeroBasedIndexNumber = 1,
+					IsSecure = false,
+					Title = "Fake mail",
+					URL = "https://fakemail.com",
+					Email = "cooldragon@example.org",
+					Username = "Dragon",
+					Password = "Si0bSww5bYeKp7Rs",
+					Category = "Samples",
+					Tags = "Samples Demo",
+				},
+			};
 		}
 
 		private static void OpenCommonSecretsFile()

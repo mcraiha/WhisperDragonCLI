@@ -6,7 +6,7 @@ namespace WhisperDragonCLI
 {
 	public static class LoginInformationsView
 	{
-		public static View CreateView()
+		public static View CreateView(List<LoginSimplified> logins)
 		{
 			var dt = new DataTable();
 
@@ -15,11 +15,11 @@ namespace WhisperDragonCLI
 				dt.Columns.Add(columnName);
 			}
 
-			List<string> firstRow = new List<string>() { "Yes", "Fake service", "https://fakeservice.com", "sample@email.com", "Dragon", "gwWTY#¤&%36" };
-			dt.Rows.Add(firstRow.ToArray());
-
-			List<string> secondRow = new List<string>() { "No", "Fake mail", "https://fakemail.com", "sample@email.com", "Dragon", "Si0bSww5bYeKp7Rs" };
-			dt.Rows.Add(secondRow.ToArray());
+			foreach (LoginSimplified ls in logins)
+			{
+				List<object> row = new List<object>() { ls.IsSecure, ls.Title, ls.URL, ls.Email, ls.Username, ls.Password};
+				dt.Rows.Add(row.ToArray());
+			}
 
 			TableView tableView = new TableView() 
 			{
