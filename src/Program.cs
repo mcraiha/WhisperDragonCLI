@@ -72,8 +72,10 @@ namespace WhisperDragonCLI
 			tabView.AddTab(new TabView.Tab("Payment cards", PaymentCardsView.CreateView(GetTestPaymentCards())), false);
 			win.Add(tabView);
 
+			StatusBar statusBar = LoginInformationsStatusBar.CreateStatusBar();
+
 			// Add both menu and win in a single call
-			Application.Top.Add (menu, win);
+			Application.Top.Add (menu, win, statusBar);
 			Application.Run ();
 		}
 
