@@ -48,6 +48,13 @@ namespace WhisperDragonCLI
 						Application.Run(createPronounceablePasswordSelection);
 					}),
 				}),
+
+				new MenuBarItem("_Help", new MenuItem[] {
+					new MenuItem("_About...", LocMan.Get("About..."), () => 
+					{
+						MessageBox.Query(20, 10, "About", "WhisperDragonCLI is CommonSecrets compatible password/secrets manager for terminals.", "Ok" );
+					}),
+				}),
 			});
 
 			var win = new Window("Hello") {
