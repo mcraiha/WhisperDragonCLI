@@ -6,7 +6,7 @@ namespace WhisperDragonCLI
 {
 	public static class PaymentCardsView
 	{
-		public static View CreateView()
+		public static View CreateView(List<PaymentCardSimplified> paymentCards)
 		{
 			var dt = new DataTable();
 
@@ -15,11 +15,11 @@ namespace WhisperDragonCLI
 				dt.Columns.Add(columnName);
 			}
 
-			List<string> firstRow = new List<string>() { "Yes", "Dragon credit", "Dave Dragon", "Credit", "4024007105746837", "678" };
-			dt.Rows.Add(firstRow.ToArray());
-
-			List<string> secondRow = new List<string>() { "No", "Fire bank", "Dave teh Dragon", "Debit", "4024007182777473", "599" };
-			dt.Rows.Add(secondRow.ToArray());
+			foreach (PaymentCardSimplified pcs in paymentCards)
+			{
+				List<object> row = new List<object>() { pcs.IsSecure, pcs.Title, pcs.NameOnTheCard, pcs.CardType, pcs.NameOnTheCard, pcs.SecurityCode };
+				dt.Rows.Add(row.ToArray());
+			}
 
 			TableView tableView = new TableView() 
 			{

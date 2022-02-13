@@ -6,7 +6,7 @@ namespace WhisperDragonCLI
 {
 	public static class ContactsView
 	{
-		public static View CreateView()
+		public static View CreateView(List<ContactSimplified> contacts)
 		{
 			var dt = new DataTable();
 
@@ -15,11 +15,11 @@ namespace WhisperDragonCLI
 				dt.Columns.Add(columnName);
 			}
 
-			List<string> firstRow = new List<string>() { "Yes", "Hanna", "Hard Worker", "hanna@localhost (work)", "1-800-123123 (work)" };
-			dt.Rows.Add(firstRow.ToArray());
-
-			List<string> secondRow = new List<string>() { "No", "Mike", "Madr", "mike@localhost (work)", "1-800-123321 (home)" };
-			dt.Rows.Add(secondRow.ToArray());
+			foreach (ContactSimplified cs in contacts)
+			{
+				List<object> row = new List<object>() { cs.IsSecure, cs.FirstName, cs.LastName, cs.Emails, cs.PhoneNumbers };
+				dt.Rows.Add(row.ToArray());
+			}
 
 			TableView tableView = new TableView() 
 			{

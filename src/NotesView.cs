@@ -6,7 +6,7 @@ namespace WhisperDragonCLI
 {
 	public static class NotesView
 	{
-		public static View CreateView()
+		public static View CreateView(List<NoteSimplified> notes)
 		{
 			var dt = new DataTable();
 
@@ -15,11 +15,11 @@ namespace WhisperDragonCLI
 				dt.Columns.Add(columnName);
 			}
 
-			List<string> firstRow = new List<string>() { "Yes", "Shopping list", "Butter, milk, eggs, cucumber" };
-			dt.Rows.Add(firstRow.ToArray());
-
-			List<string> secondRow = new List<string>() { "No", "TODO list", "Call elevator repair person" };
-			dt.Rows.Add(secondRow.ToArray());
+			foreach (NoteSimplified ns in notes)
+			{
+				List<object> row = new List<object>() { ns.IsSecure, ns.Title, ns.Text };
+				dt.Rows.Add(row.ToArray());
+			}
 
 			TableView tableView = new TableView() 
 			{

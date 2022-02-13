@@ -6,7 +6,7 @@ namespace WhisperDragonCLI
 {
 	public static class FilesView
 	{
-		public static View CreateView()
+		public static View CreateView(List<FileSimplified> files)
 		{
 			var dt = new DataTable();
 
@@ -15,11 +15,12 @@ namespace WhisperDragonCLI
 				dt.Columns.Add(columnName);
 			}
 
-			List<string> firstRow = new List<string>() { "Yes", "nature.jpg", "234 kB", "JPEG" };
-			dt.Rows.Add(firstRow.ToArray());
+			foreach (FileSimplified fs in files)
+			{
+				List<object> row = new List<object>() { fs.IsSecure, fs.Filename, fs.Filesize,fs.Filetype };
+				dt.Rows.Add(row.ToArray());
+			}
 
-			List<string> secondRow = new List<string>() { "No", "cv.docx", "83 kB", "Microsoft Word document" };
-			dt.Rows.Add(secondRow.ToArray());
 
 			TableView tableView = new TableView() 
 			{
