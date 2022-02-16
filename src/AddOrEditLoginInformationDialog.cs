@@ -29,10 +29,55 @@ namespace WhisperDragonCLI
 				Height = 1
 			};
 
+			var loginURLLabel = new Label(1, 1, LocMan.Get("Login URL:"));
+			var loginURLTextField = new TextField("") 
+			{
+				X = 1, 
+				Y = 2,
+				Width = Dim.Fill(),
+				Height = 1
+			};
+
+			var loginEmailLabel = new Label(1, 1, LocMan.Get("Login email:"));
+			var loginEmailTextField = new TextField("") 
+			{
+				X = 1, 
+				Y = 2,
+				Width = Dim.Fill(),
+				Height = 1
+			};
+
+			var loginUsernameLabel = new Label(1, 1, LocMan.Get("Login username:"));
+			var loginUsernameTextField = new TextField("") 
+			{
+				X = 1, 
+				Y = 2,
+				Width = Dim.Fill(),
+				Height = 1
+			};
+
+			var loginPasswordLabel = new Label(1, 1, LocMan.Get("Login password:"));
+			var loginPasswordTextField = new TextField("") 
+			{
+				Secret = true,
+				X = 1, 
+				Y = 2,
+				Width = Dim.Fill(),
+				Height = 1
+			};
+
+			var loginNotesLabel = new Label(1, 1, LocMan.Get("Login notes:"));
+			var loginNotesTextField = new TextField("") 
+			{
+				X = 1, 
+				Y = 2,
+				Width = Dim.Fill(),
+				Height = 5
+			};
 
 			var dialog = new Dialog(LocMan.Get(title), 60, 17, ok, cancel);
 
-			dialog.Add(isSecure, loginTitleLabel, loginTitleTextField);
+			dialog.Add(isSecure, loginTitleLabel, loginTitleTextField, loginURLLabel, loginURLTextField, loginEmailLabel, loginEmailTextField, loginUsernameLabel, loginUsernameTextField, loginPasswordLabel, loginPasswordTextField, loginNotesLabel, loginNotesTextField);
 
 			return dialog;
 		}
