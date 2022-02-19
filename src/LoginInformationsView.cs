@@ -54,6 +54,11 @@ namespace WhisperDragonCLI
 			returnValue.Add(tableView);
 
 			var addLoginButton = new Button(6, 19, LocMan.Get("+ Add login information"));
+			addLoginButton.Clicked += () => 
+			{  
+				var addLoginInformation = AddOrEditLoginInformationDialog.CreateDialog(editMode: false, () => {}, () => Application.RequestStop()); 
+				Application.Run(addLoginInformation);
+			};
 
 			returnValue.Add(addLoginButton);
 
