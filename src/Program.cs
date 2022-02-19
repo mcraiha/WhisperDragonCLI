@@ -4,6 +4,30 @@ using System.Collections.Generic;
 
 namespace WhisperDragonCLI
 {
+	public enum VisibleElement
+	{
+		NewAndOpenWizard,
+		
+		CreateNewCommonSecretsContainer,
+		OpenExistingCommonSecretsContainer,
+		
+		ShowPasswordCreators,
+		
+		ShowLoginInformations,
+		ShowNotes,
+		ShowFiles,
+		ShowContacts,
+		ShowPaymentCards,
+		
+		AddOrEditLoginInformation,
+		AddOrEditNote,
+		AddOrEditFile,
+		AddOrEditContact,
+		AddOrEditPaymentCard,
+
+		DeleteItemConfirmation,
+	}
+
 	class Program
 	{
 		private bool isFileOpen = false;
