@@ -96,11 +96,11 @@ namespace WhisperDragonCLI
 				Width = Dim.Fill (),
 				Height = Dim.Fill (1)
 			};
-			tabView.AddTab(new TabView.Tab("Login informations", LoginInformationsView.CreateView(GetTestLogins())), true);
-			tabView.AddTab(new TabView.Tab("Notes", NotesView.CreateView(GetTestNotes())), false);
-			tabView.AddTab(new TabView.Tab("Files", FilesView.CreateView(GetTestFiles())), false);
-			tabView.AddTab(new TabView.Tab("Contacts", ContactsView.CreateView(GetTestContacts())), false);
-			tabView.AddTab(new TabView.Tab("Payment cards", PaymentCardsView.CreateView(GetTestPaymentCards())), false);
+			tabView.AddTab(new TabWithId((int)VisibleElement.ShowLoginInformations, "Login informations", LoginInformationsView.CreateView(GetTestLogins())), true);
+			tabView.AddTab(new TabWithId((int)VisibleElement.ShowNotes, "Notes", NotesView.CreateView(GetTestNotes())), false);
+			tabView.AddTab(new TabWithId((int)VisibleElement.ShowFiles, "Files", FilesView.CreateView(GetTestFiles())), false);
+			tabView.AddTab(new TabWithId((int)VisibleElement.ShowContacts, "Contacts", ContactsView.CreateView(GetTestContacts())), false);
+			tabView.AddTab(new TabWithId((int)VisibleElement.ShowPaymentCards, "Payment cards", PaymentCardsView.CreateView(GetTestPaymentCards())), false);
 			tabView.SelectedTabChanged += (_, tabChangedEventArgs) => 
 			{
 				//if (tabChangedEventArgs.NewTab.)
