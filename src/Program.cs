@@ -77,6 +77,10 @@ namespace WhisperDragonCLI
 			tabView.AddTab(new TabView.Tab("Files", FilesView.CreateView(GetTestFiles())), false);
 			tabView.AddTab(new TabView.Tab("Contacts", ContactsView.CreateView(GetTestContacts())), false);
 			tabView.AddTab(new TabView.Tab("Payment cards", PaymentCardsView.CreateView(GetTestPaymentCards())), false);
+			tabView.SelectedTabChanged += (_, tabChangedEventArgs) => 
+			{
+				//if (tabChangedEventArgs.NewTab.)
+			};
 			win.Add(tabView);
 
 			StatusBar statusBar = LoginInformationsStatusBar.CreateStatusBar();
