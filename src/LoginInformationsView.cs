@@ -8,7 +8,14 @@ namespace WhisperDragonCLI
 	{
 		public static View CreateView(List<LoginSimplified> logins)
 		{
-			View returnValue = new View(new Rect(0, 0, 100, 11));
+			View returnValue = new View()
+			{
+				X = 0,
+				Y = 0,
+				Width = Dim.Fill(),
+				Height = Dim.Fill(1),
+			};
+
 			var dt = new DataTable();
 
 			foreach (string columnName in GetColumnNames())
@@ -27,7 +34,7 @@ namespace WhisperDragonCLI
 				X = 0,
 				Y = 0,
 				Width = Dim.Fill(),
-				Height = 5,
+				Height = Dim.Fill(),
 			};
 
 			tableView.Table = dt;
@@ -46,7 +53,7 @@ namespace WhisperDragonCLI
 
 			returnValue.Add(tableView);
 
-			var addLoginButton = new Button(1, 11, LocMan.Get("+ Add login information"));
+			var addLoginButton = new Button(6, 19, LocMan.Get("+ Add login information"));
 
 			returnValue.Add(addLoginButton);
 
