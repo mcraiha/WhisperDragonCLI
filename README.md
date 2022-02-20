@@ -14,6 +14,10 @@ Move to **src** folder and execute following command
 dotnet run
 ```
 
+## Uses packages
+
+[Terminal.Gui](https://github.com/migueldeicaza/gui.cs) for rendering the UI
+
 ## Licenses
 
 All code files (*.cs) are under [Unlicense](https://unlicense.org/)
