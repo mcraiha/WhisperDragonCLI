@@ -17,7 +17,7 @@ namespace WhisperDragonCLI
 
 			foreach (PaymentCardSimplified pcs in paymentCards)
 			{
-				List<object> row = new List<object>() { pcs.IsSecure, pcs.Title, pcs.NameOnTheCard, pcs.CardType, pcs.NameOnTheCard, pcs.SecurityCode };
+				List<object> row = new List<object>() { pcs.IsSecure, pcs.Title, pcs.NameOnTheCard, pcs.CardType, pcs.Number, pcs.SecurityCode };
 				dt.Rows.Add(row.ToArray());
 			}
 
