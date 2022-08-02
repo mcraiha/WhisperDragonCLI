@@ -21,3 +21,12 @@ dotnet run
 ## Licenses
 
 All code files (*.cs) are under [Unlicense](https://unlicense.org/), the Terminal.Gui is licensed under [MIT License](https://github.com/migueldeicaza/gui.cs/blob/main/LICENSE)
+
+## Docker
+
+### Build image
+
+To build image, use following command:  
+```
+docker build .
+```
