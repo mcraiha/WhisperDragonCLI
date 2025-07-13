@@ -88,6 +88,8 @@ class Program
 			Height = Dim.Fill () - 1
 		};
 
+		StatusBar statusBar = StatusBarCreator.Get(VisibleElement.ShowLoginInformations);
+
 		//LoginInformationsWindow.CreateLoginInformationsDialog(win);
 		TabView tabView = new TabView()
 		{
@@ -96,18 +98,17 @@ class Program
 			Width = Dim.Fill (),
 			Height = Dim.Fill (1)
 		};
-		tabView.AddTab(new TabWithId((int)VisibleElement.ShowLoginInformations, "Login informations", LoginInformationsView.CreateView(GetTestLogins())), true);
-		tabView.AddTab(new TabWithId((int)VisibleElement.ShowNotes, "Notes", NotesView.CreateView(GetTestNotes())), false);
-		tabView.AddTab(new TabWithId((int)VisibleElement.ShowFiles, "Files", FilesView.CreateView(GetTestFiles())), false);
-		tabView.AddTab(new TabWithId((int)VisibleElement.ShowContacts, "Contacts", ContactsView.CreateView(GetTestContacts())), false);
-		tabView.AddTab(new TabWithId((int)VisibleElement.ShowPaymentCards, "Payment cards", PaymentCardsView.CreateView(GetTestPaymentCards())), false);
+		tabView.AddTab(new TabWithId(VisibleElement.ShowLoginInformations, "Login informations", LoginInformationsView.CreateView(GetTestLogins())), true);
+		tabView.AddTab(new TabWithId(VisibleElement.ShowNotes, "Notes", NotesView.CreateView(GetTestNotes())), false);
+		tabView.AddTab(new TabWithId(VisibleElement.ShowFiles, "Files", FilesView.CreateView(GetTestFiles())), false);
+		tabView.AddTab(new TabWithId(VisibleElement.ShowContacts, "Contacts", ContactsView.CreateView(GetTestContacts())), false);
+		tabView.AddTab(new TabWithId(VisibleElement.ShowPaymentCards, "Payment cards", PaymentCardsView.CreateView(GetTestPaymentCards())), false);
 		tabView.SelectedTabChanged += (_, tabChangedEventArgs) => 
 		{
-			//if (tabChangedEventArgs.NewTab.)
+			TabWithId selectedTab = (TabWithId)tabChangedEventArgs.NewTab;
+			statusBar = StatusBarCreator.Get(selectedTab.GetTabType());
 		};
 		win.Add(tabView);
-
-		StatusBar statusBar = LoginInformationsStatusBar.CreateStatusBar();
 
 		// Add both menu and win in a single call
 		Application.Top.Add (menu, win, statusBar);

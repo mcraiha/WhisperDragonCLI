@@ -2,20 +2,20 @@ namespace WhisperDragonCLI;
 
 public sealed class TabWithId : Terminal.Gui.TabView.Tab
 {
-	private readonly int id = 0;
+	private readonly VisibleElement tabType;
 
-	public TabWithId(int customId) : base()
+	public TabWithId(VisibleElement visibleElement) : base()
 	{
-		this.id = customId;
+		this.tabType = visibleElement;
 	}
 
-	public TabWithId(int customId, string text, Terminal.Gui.View view) : base(text, view)
+	public TabWithId(VisibleElement visibleElement, string text, Terminal.Gui.View view) : base(text, view)
 	{
-		this.id = customId;
+		this.tabType = visibleElement;
 	}
 
-	public int GetId()
+	public VisibleElement GetTabType()
 	{
-		return this.id;
+		return this.tabType;
 	}
 }

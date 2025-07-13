@@ -3,20 +3,20 @@ namespace WhisperDragonCLI;
 
 public sealed class StatusBarWithId : Terminal.Gui.StatusBar
 {
-	private readonly int id = 0;
+	private readonly VisibleElement tabType;
 
-	public StatusBarWithId(int customId) : base()
+	public StatusBarWithId(VisibleElement visibleElement) : base()
 	{
-		this.id = customId;
+		this.tabType = visibleElement;
 	}
 
-	public StatusBarWithId(int customId, Terminal.Gui.StatusItem[] items) : base(items)
+	public StatusBarWithId(VisibleElement visibleElement, Terminal.Gui.StatusItem[] items) : base(items)
 	{
-		this.id = customId;
+		this.tabType = visibleElement;
 	}
 
-	public int GetId()
+	public VisibleElement GetTabType()
 	{
-		return this.id;
+		return this.tabType;
 	}
 }
