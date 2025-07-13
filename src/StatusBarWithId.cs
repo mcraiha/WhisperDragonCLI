@@ -1,23 +1,22 @@
 
-namespace WhisperDragonCLI
+namespace WhisperDragonCLI;
+
+public sealed class StatusBarWithId : Terminal.Gui.StatusBar
 {
-	public sealed class StatusBarWithId : Terminal.Gui.StatusBar
+	private readonly int id = 0;
+
+	public StatusBarWithId(int customId) : base()
 	{
-		private readonly int id = 0;
+		this.id = customId;
+	}
 
-		public StatusBarWithId(int customId) : base()
-		{
-			this.id = customId;
-		}
+	public StatusBarWithId(int customId, Terminal.Gui.StatusItem[] items) : base(items)
+	{
+		this.id = customId;
+	}
 
-		public StatusBarWithId(int customId, Terminal.Gui.StatusItem[] items) : base(items)
-		{
-			this.id = customId;
-		}
-
-		public int GetId()
-		{
-			return this.id;
-		}
+	public int GetId()
+	{
+		return this.id;
 	}
 }

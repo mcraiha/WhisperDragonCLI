@@ -1,13 +1,14 @@
 
-namespace WhisperDragonCLI
+namespace WhisperDragonCLI;
+
+/// <summary>
+/// Localization manager
+/// </summary>
+public static class LocMan
 {
-    // Localization manager
-    public static class LocMan
+    // TODO: Implement the actual one at some point
+    public static string Get(string localizationId)
     {
-        // TODO: Implement the actual one at some point
-        public static string Get(string localizationId)
-        {
-            return localizationId;
-        }
+        return localizationId;
     }
 }

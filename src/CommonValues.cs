@@ -1,11 +1,10 @@
 
-namespace WhisperDragonCLI
+namespace WhisperDragonCLI;
+
+public enum ContainerSection
 {
-	public enum ContainerSection
-	{
-		None = 0,
-		LoginInformations = 1,
-		Notes,
-		Files
-	}
+	None = 0,
+	LoginInformations = 1,
+	Notes,
+	Files
 }
