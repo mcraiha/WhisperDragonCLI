@@ -20,8 +20,15 @@ public static class StatusBarItems
 		}},
 	};
 
+	private static readonly StatusItem[] emptyItems = new StatusItem[0];
+
 	public static StatusItem[] Get(VisibleElement visibleElement)
 	{
-		return statusItems[visibleElement];
+		if (statusItems.ContainsKey(visibleElement))
+		{
+			return statusItems[visibleElement];
+		}
+
+		return emptyItems;
 	}
 }
