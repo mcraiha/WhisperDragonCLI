@@ -76,7 +76,7 @@ class Program
 			new MenuBarItem("_Help", new MenuItem[] {
 				new MenuItem("_About...", LocMan.Get("About..."), () => 
 				{
-					MessageBox.Query(20, 10, "About", "WhisperDragonCLI is CommonSecrets compatible password/secrets manager for terminals." + Environment.NewLine + Environment.NewLine + "https://github.com/mcraiha/WhisperDragonCLI", "Ok" );
+					MessageBox.Query(50, 8, "About", "WhisperDragonCLI is CommonSecrets compatible password/secrets manager for terminals." + Environment.NewLine + Environment.NewLine + "https://github.com/mcraiha/WhisperDragonCLI", "Ok" );
 				}),
 			}),
 		});
