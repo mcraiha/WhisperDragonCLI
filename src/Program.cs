@@ -35,7 +35,7 @@ class Program
 
 	private static string fullFilePath = "";
 
-	private static string filename = "";
+	private static string filename = "*Unsaved*";
 
 	static void Main(string[] args)
 	{
@@ -81,7 +81,7 @@ class Program
 			}),
 		});
 
-		var win = new Window("Hello") {
+		var win = new Window(filename) {
 			X = 0,
 			Y = 1,
 			Width = Dim.Fill (),
@@ -246,7 +246,8 @@ class Program
 
 	private static void OpenCommonSecretsFile()
 	{
-		var d = new OpenDialog ("Open", "Open a CommonSecrets file") { AllowsMultipleSelection = false };
+		var allowedOpenFileExtensions = new List<string> () { ".json", ".xml" };
+		var d = new OpenDialog ("Open", "Open a CommonSecrets file", allowedOpenFileExtensions) { AllowsMultipleSelection = false };
 		Application.Run (d);
 
 		if (!d.Canceled) {
@@ -256,8 +257,8 @@ class Program
 
 	private static void SaveCommonSecretsFileAs()
 	{
-		var allowedFileExtensions = new List<string> () { ".json", ".xml" };
-		var sd = new SaveDialog ("Save file", "Choose the path where to save the file.", allowedFileExtensions);
+		var allowedSaveFileExtensions = new List<string> () { ".json", ".xml" };
+		var sd = new SaveDialog ("Save file", "Choose the path where to save the file.", allowedSaveFileExtensions);
 		//sd.FilePath = System.IO.Path.Combine (sd.FilePath.ToString (), Win.Title.ToString ());
 		Application.Run (sd);
 
