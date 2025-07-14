@@ -88,7 +88,7 @@ class Program
 			Height = Dim.Fill () - 1
 		};
 
-		StatusBar statusBar = StatusBarCreator.Get(VisibleElement.ShowLoginInformations);
+		StatusBar statusBar = new StatusBar(StatusBarItems.Get(VisibleElement.ShowLoginInformations));
 
 		//LoginInformationsWindow.CreateLoginInformationsDialog(win);
 		TabView tabView = new TabView()
@@ -106,7 +106,7 @@ class Program
 		tabView.SelectedTabChanged += (_, tabChangedEventArgs) => 
 		{
 			TabWithId selectedTab = (TabWithId)tabChangedEventArgs.NewTab;
-			statusBar = StatusBarCreator.Get(selectedTab.GetTabType());
+			statusBar.Items = StatusBarItems.Get(selectedTab.GetTabType());
 		};
 		win.Add(tabView);
 
