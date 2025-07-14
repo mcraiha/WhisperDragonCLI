@@ -34,8 +34,10 @@ public static class PaymentCardsView
 		return tableView;
 	}
 
+	private static readonly List<string> columnNames = new List<string>() { "Secure", "Title", "Name on the card", "Card type", "Number", "Security code" };
+
 	public static List<string> GetColumnNames()
 	{
-		return new List<string>() { "Secure", "Title", "Name on the card", "Card type", "Number", "Security code" };
+		return columnNames;
 	}
 }

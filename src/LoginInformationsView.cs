@@ -65,10 +65,11 @@ public static class LoginInformationsView
 		return returnValue;
 	}
 
+	private static readonly List<string> columnNames = new List<string>() { "Secure", "Title", "URL", "Email", "Username", "Password" };
+
 	public static List<string> GetColumnNames()
 	{
-		return new List<string>() { "Secure", "Title", "URL", "Email", "Username", "Password" };
+		return columnNames;
 	}
-
 
 }

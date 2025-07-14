@@ -34,8 +34,10 @@ public static class NotesView
 		return tableView;
 	}
 
+	private static readonly List<string> columnNames = new List<string>() { "Secure", "Title", "Text" };
+
 	public static List<string> GetColumnNames()
 	{
-		return new List<string>() { "Secure", "Title", "Text" };
+		return columnNames;
 	}
 }

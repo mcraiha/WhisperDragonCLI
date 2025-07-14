@@ -34,8 +34,10 @@ public static class ContactsView
 		return tableView;
 	}
 
+	private static readonly List<string> columnNames = new List<string>() { "Secure", "First name", "Last name", "Email(s)", "Phone number(s)" };
+
 	public static List<string> GetColumnNames()
 	{
-		return new List<string>() { "Secure", "First name", "Last name", "Email(s)", "Phone number(s)" };
+		return columnNames;
 	}
 }
