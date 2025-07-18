@@ -1,6 +1,7 @@
 using System;
 using Terminal.Gui;
 using System.Collections.Generic;
+using System.IO;
 
 namespace WhisperDragonCLI;
 
@@ -261,8 +262,14 @@ class Program
 		var d = new OpenDialog ("Open", "Open a CommonSecrets file", allowedOpenFileExtensions) { AllowsMultipleSelection = false };
 		Application.Run (d);
 
-		if (!d.Canceled) {
+		if (!d.Canceled)
+		{
+			// Try to open the file in path
+
+			// Success, fill UI things
 			fullFilePath = d.FilePaths[0];
+			filename = Path.GetFileName(fullFilePath);
+			isFileModified = false;
 		}
 	}
 
