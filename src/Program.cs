@@ -37,22 +37,24 @@ class Program
 
 	private static string filename = "*Unsaved*";
 
+	private static TabWithId loginsTab;
+
 	static void Main(string[] args)
 	{
-		Application.Init ();
-		var menu = new MenuBar (new MenuBarItem [] {
+		Application.Init();
+		var menu = new MenuBar(new MenuBarItem[] {
 			new MenuBarItem("_File", new MenuItem [] {
-				new MenuItem("_New...", LocMan.Get("New CommonSecrets file..."), () => 
+				new MenuItem("_New...", LocMan.Get("New CommonSecrets file..."), () =>
 				{
-					var createNew = NewFileDialog.CreateNewFileDialog(() => Application.RequestStop(), () => Application.RequestStop()); 
+					var createNew = NewFileDialog.CreateNewFileDialog(() => Application.RequestStop(), () => Application.RequestStop());
 					Application.Run(createNew);
 				}),
 				new MenuItem("_Open...", LocMan.Get("Open existing CommonSecrets file..."), () => OpenCommonSecretsFile()),
 				new MenuItem("_Save", "Save CommonSecrets file", () => {}),
 				new MenuItem("Save As...", "Save CommonSecrets file as...", () => SaveCommonSecretsFileAs()),
 				new MenuItem("_Close", "Close file", () => {}),
-				new MenuItem("_Quit", "Quit", () => { 
-					Application.RequestStop (); 
+				new MenuItem("_Quit", "Quit", () => {
+					Application.RequestStop ();
 				})
 			}),
 
@@ -61,31 +63,32 @@ class Program
 			}),
 
 			new MenuBarItem("_Tools", new MenuItem[] {
-				new MenuItem("_Generate Random Password...", LocMan.Get("Generate a new random password..."), () => 
+				new MenuItem("_Generate Random Password...", LocMan.Get("Generate a new random password..."), () =>
 				{
-					var createPasswordSelection = PasswordGeneratorDialog.CreateDialog(() => Application.RequestStop()); 
+					var createPasswordSelection = PasswordGeneratorDialog.CreateDialog(() => Application.RequestStop());
 					Application.Run(createPasswordSelection);
 				}),
-				new MenuItem("_Generate Pronounceable Password...", LocMan.Get("Generate a new pronounceable password..."), () => 
+				new MenuItem("_Generate Pronounceable Password...", LocMan.Get("Generate a new pronounceable password..."), () =>
 				{
-					var createPronounceablePasswordSelection = PasswordGeneratorPronounceableDialog.CreateDialog(() => Application.RequestStop()); 
+					var createPronounceablePasswordSelection = PasswordGeneratorPronounceableDialog.CreateDialog(() => Application.RequestStop());
 					Application.Run(createPronounceablePasswordSelection);
 				}),
 			}),
 
 			new MenuBarItem("_Help", new MenuItem[] {
-				new MenuItem("_About...", LocMan.Get("About..."), () => 
+				new MenuItem("_About...", LocMan.Get("About..."), () =>
 				{
 					MessageBox.Query(50, 8, "About", "WhisperDragonCLI is CommonSecrets compatible password/secrets manager for terminals." + Environment.NewLine + Environment.NewLine + "https://github.com/mcraiha/WhisperDragonCLI", "Ok" );
 				}),
 			}),
 		});
 
-		var win = new Window(filename) {
+		var win = new Window(filename)
+		{
 			X = 0,
 			Y = 1,
-			Width = Dim.Fill (),
-			Height = Dim.Fill () - 1
+			Width = Dim.Fill(),
+			Height = Dim.Fill() - 1
 		};
 
 		StatusBar statusBar = new StatusBar(StatusBarItems.Get(VisibleElement.ShowLoginInformations));
@@ -95,15 +98,18 @@ class Program
 		{
 			X = 0,
 			Y = 0,
-			Width = Dim.Fill (),
-			Height = Dim.Fill (1)
+			Width = Dim.Fill(),
+			Height = Dim.Fill(1)
 		};
-		tabView.AddTab(new TabWithId(VisibleElement.ShowLoginInformations, "Login informations", LoginInformationsView.CreateView(GetTestLogins())), true);
+
+		loginsTab = new TabWithId(VisibleElement.ShowLoginInformations, "Login informations", LoginInformationsView.Create(GetTestLogins()));
+		tabView.AddTab(loginsTab, true);
+
 		tabView.AddTab(new TabWithId(VisibleElement.ShowNotes, "Notes", NotesView.CreateView(GetTestNotes())), false);
 		tabView.AddTab(new TabWithId(VisibleElement.ShowFiles, "Files", FilesView.CreateView(GetTestFiles())), false);
 		tabView.AddTab(new TabWithId(VisibleElement.ShowContacts, "Contacts", ContactsView.CreateView(GetTestContacts())), false);
 		tabView.AddTab(new TabWithId(VisibleElement.ShowPaymentCards, "Payment cards", PaymentCardsView.CreateView(GetTestPaymentCards())), false);
-		tabView.SelectedTabChanged += (_, tabChangedEventArgs) => 
+		tabView.SelectedTabChanged += (_, tabChangedEventArgs) =>
 		{
 			TabWithId selectedTab = (TabWithId)tabChangedEventArgs.NewTab;
 			statusBar.Items = StatusBarItems.Get(selectedTab.GetTabType());
@@ -111,17 +117,22 @@ class Program
 		win.Add(tabView);
 
 		// Add both menu and win in a single call
-		Application.Top.Add (menu, win, statusBar);
-		Application.Run ();
+		Application.Top.Add(menu, win, statusBar);
+		Application.Run();
+	}
+
+	private static void CopyUsername()
+	{
+		((LoginInformationsView)loginsTab.GetView()).CopyURLToClipboard();
 	}
 
 	// Development related data (will be removed at some point)
 
 	private static List<LoginSimplified> GetTestLogins()
 	{
-		return new List<LoginSimplified>() 
+		return new List<LoginSimplified>()
 		{
-			new LoginSimplified() 
+			new LoginSimplified()
 			{
 				zeroBasedIndexNumber = 0,
 				IsSecure = true,
@@ -133,7 +144,7 @@ class Program
 				Category = "Samples",
 				Tags = "Samples Demo",
 			},
-			new LoginSimplified() 
+			new LoginSimplified()
 			{
 				zeroBasedIndexNumber = 1,
 				IsSecure = false,
@@ -264,9 +275,9 @@ class Program
 
 		if (!sd.Canceled) 
 		{
-			if (System.IO.File.Exists (sd.FilePath.ToString ())) 
+			if (System.IO.File.Exists(sd.FilePath.ToString())) 
 			{
-				if (MessageBox.Query ("Save File", "File already exists. Overwrite any way?", "No", "Ok") == 1) 
+				if (MessageBox.Query("Save File", "File already exists. Overwrite any way?", "No", "Ok") == 1) 
 				{
 					// Overwrite existing file
 				} 
