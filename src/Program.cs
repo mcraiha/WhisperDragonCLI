@@ -30,8 +30,8 @@ public enum VisibleElement
 
 class Program
 {
-	private bool isFileOpen = false;
-	private bool isFileModified = false;
+	private static bool isFileOpen = false;
+	private static bool isFileModified = false;
 
 	private static string fullFilePath = "";
 
@@ -50,9 +50,9 @@ class Program
 					Application.Run(createNew);
 				}),
 				new MenuItem("_Open...", LocMan.Get("Open existing CommonSecrets file..."), () => OpenCommonSecretsFile()),
-				new MenuItem("_Save", "Save CommonSecrets file", () => {}),
-				new MenuItem("Save As...", "Save CommonSecrets file as...", () => SaveCommonSecretsFileAs()),
-				new MenuItem("_Close", "Close file", () => {}),
+				new MenuItem("_Save", "Save CommonSecrets file", () => {}, () => isFileOpen),
+				new MenuItem("Save As...", "Save CommonSecrets file as...", () => SaveCommonSecretsFileAs(), () => isFileOpen),
+				new MenuItem("_Close", "Close file", () => {}, () => isFileOpen),
 				new MenuItem("_Quit", "Quit", () => {
 					Application.RequestStop ();
 				})
