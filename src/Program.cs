@@ -53,9 +53,11 @@ class Program
 				new MenuItem("_Open...", LocMan.Get("Open existing CommonSecrets file..."), () => OpenCommonSecretsFile()),
 				new MenuItem("_Save", "Save CommonSecrets file", () => {}, () => isFileOpen),
 				new MenuItem("Save As...", "Save CommonSecrets file as...", () => SaveCommonSecretsFileAs(), () => isFileOpen),
-				new MenuItem("_Close", "Close file", () => {}, () => isFileOpen),
+				new MenuItem("_Close", "Close file", () => {
+					TryToCloseFile();
+				}, () => isFileOpen),
 				new MenuItem("_Quit", "Quit", () => {
-					Application.RequestStop ();
+					TryToQuit();
 				})
 			}),
 
@@ -258,9 +260,12 @@ class Program
 
 	private static void OpenCommonSecretsFile()
 	{
-		var allowedOpenFileExtensions = new List<string> () { ".json", ".xml" };
-		var d = new OpenDialog ("Open", "Open a CommonSecrets file", allowedOpenFileExtensions) { AllowsMultipleSelection = false };
-		Application.Run (d);
+		// Check if we have unmodified data before we try to open another file
+
+
+		var allowedOpenFileExtensions = new List<string>() { ".json", ".xml" };
+		var d = new OpenDialog("Open", "Open a CommonSecrets file", allowedOpenFileExtensions) { AllowsMultipleSelection = false };
+		Application.Run(d);
 
 		if (!d.Canceled)
 		{
@@ -275,32 +280,58 @@ class Program
 
 	private static void SaveCommonSecretsFileAs()
 	{
-		var allowedSaveFileExtensions = new List<string> () { ".json", ".xml" };
-		var sd = new SaveDialog ("Save file", "Choose the path where to save the file.", allowedSaveFileExtensions);
+		var allowedSaveFileExtensions = new List<string>() { ".json", ".xml" };
+		var sd = new SaveDialog("Save file", "Choose the path where to save the file.", allowedSaveFileExtensions);
 		//sd.FilePath = System.IO.Path.Combine (sd.FilePath.ToString (), Win.Title.ToString ());
-		Application.Run (sd);
+		Application.Run(sd);
 
-		if (!sd.Canceled) 
+		if (!sd.Canceled)
 		{
-			if (System.IO.File.Exists(sd.FilePath.ToString())) 
+			if (System.IO.File.Exists(sd.FilePath.ToString()))
 			{
-				if (MessageBox.Query("Save File", "File already exists. Overwrite any way?", "No", "Ok") == 1) 
+				if (MessageBox.Query("Save File", "File already exists. Overwrite any way?", "No", "Ok") == 1)
 				{
 					// Overwrite existing file
-				} 
-				else 
+				}
+				else
 				{
 					// Do nothing
 				}
-			} 
-			else 
+			}
+			else
 			{
 				// Create a new file
 			}
-		} 
-		else 
+		}
+		else
 		{
 			// Saving canceled
+		}
+	}
+
+	private static void TryToCloseFile()
+	{
+		// Check if there are unsaved modifications
+		if (isFileModified)
+		{
+			
+		}
+		else
+		{
+			
+		}
+	}
+
+	private static void TryToQuit()
+	{
+		// Check if there are unsaved modifications
+		if (isFileModified)
+		{
+
+		}
+		else
+		{
+			Application.RequestStop();
 		}
 	}
 }
