@@ -1,3 +1,5 @@
+using Terminal.Gui;
+
 namespace WhisperDragonCLI;
 
 public sealed class TabWithId : Terminal.Gui.TabView.Tab
@@ -17,5 +19,10 @@ public sealed class TabWithId : Terminal.Gui.TabView.Tab
 	public VisibleElement GetTabType()
 	{
 		return this.tabType;
+	}
+
+	public View GetView()
+	{
+		return this.View;
 	}
 }
