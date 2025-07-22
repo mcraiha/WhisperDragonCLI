@@ -40,7 +40,7 @@ public class LoginInformationsView : View
 
 	public void CopyURLToClipboard()
 	{
-		Clipboard.TrySetClipboardData((string)dataTable.Rows[tableView.SelectedRow]["URL"]);
+		//Clipboard.TrySetClipboardData((string)dataTable.Rows[tableView.SelectedRow]["URL"]);
 	}
 
 	public static LoginInformationsView Create(List<LoginSimplified> logins)

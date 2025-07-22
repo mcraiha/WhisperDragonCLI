@@ -2,6 +2,7 @@ using System;
 using Terminal.Gui;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace WhisperDragonCLI;
 
@@ -39,6 +40,8 @@ class Program
 	private static string filename = "*Unsaved*";
 
 	private static TabWithId loginsTab;
+
+	private static StatusBar statusBar;
 
 	static void Main(string[] args)
 	{
@@ -94,7 +97,7 @@ class Program
 			Height = Dim.Fill() - 1
 		};
 
-		StatusBar statusBar = new StatusBar(StatusBarItems.Get(VisibleElement.ShowLoginInformations));
+		statusBar = new StatusBar(GetStatusItems(VisibleElement.ShowLoginInformations));
 
 		//LoginInformationsWindow.CreateLoginInformationsDialog(win);
 		TabView tabView = new TabView()
@@ -115,7 +118,7 @@ class Program
 		tabView.SelectedTabChanged += (_, tabChangedEventArgs) =>
 		{
 			TabWithId selectedTab = (TabWithId)tabChangedEventArgs.NewTab;
-			statusBar.Items = StatusBarItems.Get(selectedTab.GetTabType());
+			statusBar.Items = GetStatusItems(selectedTab.GetTabType());
 		};
 		win.Add(tabView);
 
@@ -126,7 +129,12 @@ class Program
 
 	private static void CopyUsername()
 	{
-		((LoginInformationsView)loginsTab.GetView()).CopyURLToClipboard();
+		//((LoginInformationsView)loginsTab.GetView()).CopyURLToClipboard();
+	}
+
+	private static void CopyPassword()
+	{
+
 	}
 
 	// Development related data (will be removed at some point)
@@ -314,11 +322,11 @@ class Program
 		// Check if there are unsaved modifications
 		if (isFileModified)
 		{
-			
+
 		}
 		else
 		{
-			
+
 		}
 	}
 
@@ -333,5 +341,50 @@ class Program
 		{
 			Application.RequestStop();
 		}
+	}
+
+	private static readonly TimeSpan statusItemsWaitTime = TimeSpan.FromMilliseconds(500);
+
+	private static readonly (StatusItem[], VisibleElement) usernameCopiedEffect = (new StatusItem[] { new StatusItem(Key.Null, "Username copied to clipboard", () => { }) }, VisibleElement.ShowLoginInformations);
+
+	private static readonly Dictionary<VisibleElement, StatusItem[]> statusItems = new()
+	{
+		{ VisibleElement.ShowLoginInformations, new StatusItem[] {
+			new StatusItem(Key.F5, $"~F5~ {LocMan.Get("Open URL")}", () => {}),
+			new StatusItem(Key.F6, $"~F6~ {LocMan.Get("Copy URL")}", () => {}),
+			new StatusItem(Key.F7, $"~F7~ {LocMan.Get("Copy Username")}", () => { CopyUsername(); TryToExecuteStatusItemsTimedEffect(usernameCopiedEffect); }),
+			new StatusItem(Key.F8, $"~F8~ {LocMan.Get("Copy Password")}", () => { CopyPassword(); }),
+		}},
+
+		{ VisibleElement.ShowNotes, new StatusItem[] {
+			new StatusItem(Key.F7, $"~F7~ {LocMan.Get("Copy Title")}", () => {}),
+			new StatusItem(Key.F8, $"~F8~ {LocMan.Get("Copy Text")}", () => {}),
+		}},
+	};
+
+	private static readonly StatusItem[] emptyItems = new StatusItem[0];
+
+	public static StatusItem[] GetStatusItems(VisibleElement visibleElement)
+	{
+		if (statusItems.ContainsKey(visibleElement))
+		{
+			return statusItems[visibleElement];
+		}
+
+		return emptyItems;
+	}
+
+	private static void TryToExecuteStatusItemsTimedEffect((StatusItem[], VisibleElement) nextEffect)
+	{
+		statusBar.Items = nextEffect.Item1;
+		statusBar.Redraw(Rect.Empty);
+		Thread thread1 = new Thread(() => WaitAndReturnToChosenStatusItems(nextEffect.Item2));
+		thread1.Start();
+	}
+
+	private static void WaitAndReturnToChosenStatusItems(VisibleElement returnToThis)
+	{
+		Thread.Sleep(statusItemsWaitTime);
+		//statusBar.Items = GetStatusItems(returnToThis);
 	}
 }
