@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WhisperDragonCLI;
 
-public class LoginInformationsView : View
+public sealed class LoginInformationsView : View
 {
 	private readonly DataTable dataTable;
 
