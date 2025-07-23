@@ -377,7 +377,7 @@ class Program
 	private static void TryToExecuteStatusItemsTimedEffect((StatusItem[], VisibleElement) nextEffect)
 	{
 		statusBar.Items = nextEffect.Item1;
-		statusBar.Redraw(Rect.Empty);
+		Application.Refresh();
 		Thread thread1 = new Thread(() => WaitAndReturnToChosenStatusItems(nextEffect.Item2));
 		thread1.Start();
 	}
@@ -385,6 +385,7 @@ class Program
 	private static void WaitAndReturnToChosenStatusItems(VisibleElement returnToThis)
 	{
 		Thread.Sleep(statusItemsWaitTime);
-		//statusBar.Items = GetStatusItems(returnToThis);
+		statusBar.Items = GetStatusItems(returnToThis);
+		Application.Refresh();
 	}
 }
