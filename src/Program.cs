@@ -50,6 +50,17 @@ class Program
 			new MenuBarItem("_File", new MenuItem [] {
 				new MenuItem("_New...", LocMan.Get("New CommonSecrets file..."), () =>
 				{
+					if (isFileOpen)
+					{
+						if (TryToCloseFile())
+						{
+
+						}
+						else
+						{
+							return;
+						}
+					}
 					var createNew = NewFileDialog.CreateNewFileDialog(() => Application.RequestStop(), () => Application.RequestStop());
 					Application.Run(createNew);
 				}),
@@ -319,16 +330,28 @@ class Program
 		}
 	}
 
-	private static void TryToCloseFile()
+	/// <summary>
+	/// Try to close file (check if there are any changes that should be saved)
+	/// </summary>
+	/// <returns>True if close was success; False otherwise</returns>
+	private static bool TryToCloseFile()
 	{
 		// Check if there are unsaved modifications
 		if (isFileModified)
 		{
-
+			if (MessageBox.Query("Save modifications", "Do you want to save modifications?", "Yes", "Cancel") == 1)
+			{
+				// Do the actual save here
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		else
 		{
-
+			return true;
 		}
 	}
 
