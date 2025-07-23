@@ -65,7 +65,9 @@ class Program
 			}),
 
 			new MenuBarItem("_Edit", new MenuItem[] {
-
+				new MenuItem("_Add...", "Add entry", () => {}, () => isFileOpen),
+				new MenuItem("_Duplicate...", "Duplicate entry", () => {}, () => isFileOpen),
+				new MenuItem("_Remove...", "Remove entry", () => {}, () => isFileOpen),
 			}),
 
 			new MenuBarItem("_Tools", new MenuItem[] {
