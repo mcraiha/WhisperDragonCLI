@@ -3,6 +3,7 @@ using Terminal.Gui;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using CSCommonSecrets;
 
 namespace WhisperDragonCLI;
 
@@ -37,13 +38,16 @@ class Program
 
 	private static string fullFilePath = "";
 
-	private static string filename = "*Unsaved*";
+	private static readonly string defaultNameForNewFile = "*Unsaved*";
+	private static string filename = "";
+
+	private static CommonSecretsContainer? commonSecretsContainer = null;
 
 	private static TabWithId loginsTab;
 
 	private static StatusBar statusBar;
 
-	private static readonly Dictionary<string, byte[]> knownDerivedPasswords = new Dictionary<string, byte[]>();
+	private static readonly Dictionary<byte[], byte[]> knownDerivedPasswords = new Dictionary<byte[], byte[]>();
 
 	static void Main(string[] args)
 	{
@@ -281,9 +285,20 @@ class Program
 		};
 	}
 
-	private static void NewCommonSecretsCreated(int todo, byte[] derivedPassword)
+	private static void NewCommonSecretsCreated(KeyDerivationFunctionEntry keyDerivationFunctionEntry, string password)
 	{
-		//AddKnownDerivedPassword(.id, derivedPassword);
+		// Derive password bytes, and store them into memory
+		ClearKnownDerivedPasswords();
+		byte[] derivedPassword = keyDerivationFunctionEntry.GeneratePasswordBytes(password);
+		AddKnownDerivedPassword(keyDerivationFunctionEntry.keyIdentifier, derivedPassword);
+
+		// Create new container
+		commonSecretsContainer = new CommonSecretsContainer(keyDerivationFunctionEntry);
+
+		// Set state to unsaved
+		fullFilePath = "";
+		filename = defaultNameForNewFile;
+		isFileModified = true;
 	}
 
 	private static void OpenCommonSecretsFile()
@@ -426,7 +441,7 @@ class Program
 
 	private static void ClearKnownDerivedPasswords()
 	{
-		// Fill values with zeroes ()
+		// Fill values with zeroes (most likely unneeded feature)
 		foreach (byte[] val in knownDerivedPasswords.Values)
 		{
 			for (int i = 0; i < val.Length; i++)
@@ -437,7 +452,7 @@ class Program
 		knownDerivedPasswords.Clear();
 	}
 
-	private static void AddKnownDerivedPassword(string id, byte[] derivedPassword)
+	private static void AddKnownDerivedPassword(byte[] id, byte[] derivedPassword)
 	{
 		knownDerivedPasswords[id] = derivedPassword;
 	}
