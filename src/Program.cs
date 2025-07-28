@@ -304,6 +304,13 @@ class Program
 	private static void OpenCommonSecretsFile()
 	{
 		// Check if we have unmodified data before we try to open another file
+		if (isFileModified)
+		{
+			if (MessageBox.Query("Save modifications", "Do you want to save modifications?", "Yes", "Cancel") == 1)
+			{
+				// TODO: Do actual save
+			}
+		}
 
 
 		var allowedOpenFileExtensions = new List<string>() { ".json", ".xml" };
@@ -314,12 +321,25 @@ class Program
 		{
 			// Try to open the file in path
 
+			// TODO: Check file format and try to deserialize it
+
+			// TODO: Ask for password(s)
+
 			// Success, fill UI things
 			fullFilePath = d.FilePaths[0];
 			filename = Path.GetFileName(fullFilePath);
 			isFileModified = false;
 			ClearKnownDerivedPasswords();
 		}
+	}
+
+	private static void SaveCommonSecretsFile()
+	{
+		// Use same serialization format as existing file
+
+		// Save to .tmp file
+
+		// Replace the old file with new one
 	}
 
 	private static void SaveCommonSecretsFileAs()
@@ -333,7 +353,7 @@ class Program
 		{
 			if (System.IO.File.Exists(sd.FilePath.ToString()))
 			{
-				if (MessageBox.Query("Save File", "File already exists. Overwrite any way?", "No", "Ok") == 1)
+				if (MessageBox.Query("Save File", "File already exists. Overwrite it any way?", "No", "Ok") == 1)
 				{
 					// Overwrite existing file
 				}
