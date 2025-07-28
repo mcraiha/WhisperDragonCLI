@@ -24,13 +24,17 @@ public sealed class NewFileDialog : Dialog
 		return this.password1Field.Text == this.password2Field.Text;
 	}
 
-	public static NewFileDialog CreateNewFileDialog(Action okAction, Action cancelAction)
+	private byte[] GetDerivedPassword()
+	{
+		return new byte[] { };
+	}
+
+	public static NewFileDialog CreateNewFileDialog(Action<int, byte[]>? okAction, Action? cancelAction)
 	{
 		var ok = new Button(3, 16, LocMan.Get("Ok"));
-		ok.Clicked += () => { okAction.Invoke(); };
 
 		var cancel = new Button(10, 16, LocMan.Get("Cancel"));
-		cancel.Clicked += () => { cancelAction.Invoke(); };
+		cancel.Clicked += () => { cancelAction?.Invoke(); Application.RequestStop(); };
 
 		var enterPasswordLabel = new Label(1, 1, LocMan.Get("Enter primary password:"));
 
@@ -56,6 +60,7 @@ public sealed class NewFileDialog : Dialog
 		};
 
 		var dialog = new NewFileDialog(ok, cancel, passwordFirstTime, passwordSecondTime);
+		ok.Clicked += () => { okAction?.Invoke(1, dialog.GetDerivedPassword()); Application.RequestStop(); };
 
 		var pbkdf2SettingsLabel = new Label(1, 7, LocMan.Get("- Pbkdf2 settings -"));
 

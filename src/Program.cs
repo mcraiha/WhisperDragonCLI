@@ -61,7 +61,7 @@ class Program
 							return;
 						}
 					}
-					var createNew = NewFileDialog.CreateNewFileDialog(() => Application.RequestStop(), () => Application.RequestStop());
+					var createNew = NewFileDialog.CreateNewFileDialog(NewCommonSecretsCreated, null);
 					Application.Run(createNew);
 				}),
 				new MenuItem("_Open...", LocMan.Get("Open existing CommonSecrets file..."), () => OpenCommonSecretsFile()),
@@ -277,6 +277,11 @@ class Program
 				SecurityCode = "599"
 			}
 		};
+	}
+
+	private static void NewCommonSecretsCreated(int todo, byte[] derivedPassword)
+	{
+
 	}
 
 	private static void OpenCommonSecretsFile()
