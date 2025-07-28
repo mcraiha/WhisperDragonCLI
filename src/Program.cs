@@ -43,6 +43,8 @@ class Program
 
 	private static StatusBar statusBar;
 
+	private static readonly Dictionary<string, byte[]> knownDerivedPasswords = new Dictionary<string, byte[]>();
+
 	static void Main(string[] args)
 	{
 		Application.Init();
@@ -281,7 +283,7 @@ class Program
 
 	private static void NewCommonSecretsCreated(int todo, byte[] derivedPassword)
 	{
-
+		//AddKnownDerivedPassword(.id, derivedPassword);
 	}
 
 	private static void OpenCommonSecretsFile()
@@ -301,6 +303,7 @@ class Program
 			fullFilePath = d.FilePaths[0];
 			filename = Path.GetFileName(fullFilePath);
 			isFileModified = false;
+			ClearKnownDerivedPasswords();
 		}
 	}
 
@@ -346,6 +349,7 @@ class Program
 		{
 			if (MessageBox.Query("Save modifications", "Do you want to save modifications?", "Yes", "Cancel") == 1)
 			{
+				ClearKnownDerivedPasswords();
 				// Do the actual save here
 				return true;
 			}
@@ -356,6 +360,7 @@ class Program
 		}
 		else
 		{
+			ClearKnownDerivedPasswords();
 			return true;
 		}
 	}
@@ -417,5 +422,23 @@ class Program
 		Thread.Sleep(statusItemsWaitTime);
 		statusBar.Items = GetStatusItems(returnToThis);
 		Application.Refresh();
+	}
+
+	private static void ClearKnownDerivedPasswords()
+	{
+		// Fill values with zeroes ()
+		foreach (byte[] val in knownDerivedPasswords.Values)
+		{
+			for (int i = 0; i < val.Length; i++)
+			{
+				val[i] = 0;
+			}
+		}
+		knownDerivedPasswords.Clear();
+	}
+
+	private static void AddKnownDerivedPassword(string id, byte[] derivedPassword)
+	{
+		knownDerivedPasswords[id] = derivedPassword;
 	}
 }

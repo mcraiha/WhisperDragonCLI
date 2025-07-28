@@ -29,6 +29,13 @@ public sealed class NewFileDialog : Dialog
 		return new byte[] { };
 	}
 
+	private static readonly string defaultKeyDerivationFunctionEntryId = "primary";
+
+	/*private static KeyDerivationFunctionEntry GetKeyDerivationFunctionEntry()
+	{
+
+	}*/
+
 	public static NewFileDialog CreateNewFileDialog(Action<int, byte[]>? okAction, Action? cancelAction)
 	{
 		var ok = new Button(3, 16, LocMan.Get("Ok"));
