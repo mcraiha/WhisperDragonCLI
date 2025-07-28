@@ -365,7 +365,7 @@ class Program
 			if (MessageBox.Query("Save modifications", "Do you want to save modifications?", "Yes", "Cancel") == 1)
 			{
 				ClearKnownDerivedPasswords();
-				// Do the actual save here
+				// TODO: Do the actual save here
 				return true;
 			}
 			else
@@ -385,12 +385,15 @@ class Program
 		// Check if there are unsaved modifications
 		if (isFileModified)
 		{
+			if (MessageBox.Query("Save modifications", "Do you want to save modifications?", "Yes", "Cancel") == 1)
+			{
+				ClearKnownDerivedPasswords();
+				// TODO: Do the actual save here
 
+			}
 		}
-		else
-		{
-			Application.RequestStop();
-		}
+	
+		Application.RequestStop();
 	}
 
 	private static readonly TimeSpan statusItemsWaitTime = TimeSpan.FromMilliseconds(500);
