@@ -11,7 +11,7 @@ public static class EmbedResourceLoader
         Stream namesStream = LoadResourceStream(resourceToLoad, typeof(EmbedResourceLoader).GetTypeInfo().Assembly);
         using (StreamReader sr = new StreamReader(namesStream)) 
         {
-            string line;
+            string? line;
             while ((line = sr.ReadLine()) != null) 
             {
                 if (line.StartsWith("//") || line.Length < 1)
@@ -33,7 +33,7 @@ public static class EmbedResourceLoader
         Stream namesStream = LoadResourceStream(resourceToLoad, typeof(EmbedResourceLoader).GetTypeInfo().Assembly);
         using (StreamReader sr = new StreamReader(namesStream)) 
         {
-            string line;
+            string? line;
             while ((line = sr.ReadLine()) != null) 
             {
                 if (line.StartsWith("//") || line.Length < 1)
@@ -48,7 +48,7 @@ public static class EmbedResourceLoader
         return returnValue;
     }
 
-    private static Stream LoadResourceStream(string resourceName, Assembly assembly)
+    private static Stream? LoadResourceStream(string resourceName, Assembly assembly)
     {
         string properResourceName = GetResourceName(assembly, resourceName);
         return assembly.GetManifestResourceStream(properResourceName);
