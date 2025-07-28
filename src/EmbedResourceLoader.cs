@@ -4,58 +4,70 @@ using System.Reflection;
 
 public static class EmbedResourceLoader
 {
-    public static HashSet<string> ReadAsHashset(string resourceToLoad)
-    {
-        HashSet<string> returnValue = new HashSet<string>();
+	public static HashSet<string> ReadAsHashset(string resourceToLoad)
+	{
+		HashSet<string> returnValue = new HashSet<string>();
 
-        Stream namesStream = LoadResourceStream(resourceToLoad, typeof(EmbedResourceLoader).GetTypeInfo().Assembly);
-        using (StreamReader sr = new StreamReader(namesStream)) 
-        {
-            string? line;
-            while ((line = sr.ReadLine()) != null) 
-            {
-                if (line.StartsWith("//") || line.Length < 1)
-                {
-                    continue;
-                }
+		Stream? namesStream = LoadResourceStream(resourceToLoad, typeof(EmbedResourceLoader).GetTypeInfo().Assembly);
 
-                returnValue.Add(line);
-            }
-        }
+		if (namesStream == null)
+		{
+			throw new FileNotFoundException($"Could not find resource with name: {resourceToLoad}");
+		}
 
-        return returnValue;
-    }
+		using (StreamReader sr = new StreamReader(namesStream))
+		{
+			string? line;
+			while ((line = sr.ReadLine()) != null)
+			{
+				if (line.StartsWith("//") || line.Length < 1)
+				{
+					continue;
+				}
 
-    public static List<string> ReadAsList(string resourceToLoad)
-    {
-        List<string> returnValue = new List<string>();
+				returnValue.Add(line);
+			}
+		}
 
-        Stream namesStream = LoadResourceStream(resourceToLoad, typeof(EmbedResourceLoader).GetTypeInfo().Assembly);
-        using (StreamReader sr = new StreamReader(namesStream)) 
-        {
-            string? line;
-            while ((line = sr.ReadLine()) != null) 
-            {
-                if (line.StartsWith("//") || line.Length < 1)
-                {
-                    continue;
-                }
+		return returnValue;
+	}
 
-                returnValue.Add(line);
-            }
-        }
+	public static List<string> ReadAsList(string resourceToLoad)
+	{
+		List<string> returnValue = new List<string>();
 
-        return returnValue;
-    }
+		Stream? namesStream = LoadResourceStream(resourceToLoad, typeof(EmbedResourceLoader).GetTypeInfo().Assembly);
+		
+		if (namesStream == null)
+		{
+			throw new FileNotFoundException($"Could not find resource with name: {resourceToLoad}");
+		}
+		
+		using (StreamReader sr = new StreamReader(namesStream))
+		{
+			string? line;
+			while ((line = sr.ReadLine()) != null)
+			{
+				if (line.StartsWith("//") || line.Length < 1)
+				{
+					continue;
+				}
 
-    private static Stream? LoadResourceStream(string resourceName, Assembly assembly)
-    {
-        string properResourceName = GetResourceName(assembly, resourceName);
-        return assembly.GetManifestResourceStream(properResourceName);
-    }
+				returnValue.Add(line);
+			}
+		}
 
-    private static string GetResourceName(Assembly assembly, string resourceName)
-    {
-        return $"{assembly.GetName().Name}.{resourceName.Replace(" ", "_").Replace("\\", ".").Replace("/", ".")}";
-    }
+		return returnValue;
+	}
+
+	private static Stream? LoadResourceStream(string resourceName, Assembly assembly)
+	{
+		string properResourceName = GetResourceName(assembly, resourceName);
+		return assembly.GetManifestResourceStream(properResourceName);
+	}
+
+	private static string GetResourceName(Assembly assembly, string resourceName)
+	{
+		return $"{assembly.GetName().Name}.{resourceName.Replace(" ", "_").Replace("\\", ".").Replace("/", ".")}";
+	}
 }
