@@ -3,6 +3,10 @@ using Terminal.Gui;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Text;
+using System.Text.Json;
+using System.Xml;
+using System.Xml.Serialization;
 using CSCommonSecrets;
 
 namespace WhisperDragonCLI;
@@ -10,18 +14,18 @@ namespace WhisperDragonCLI;
 public enum VisibleElement
 {
 	NewAndOpenWizard,
-	
+
 	CreateNewCommonSecretsContainer,
 	OpenExistingCommonSecretsContainer,
-	
+
 	ShowPasswordCreators,
-	
+
 	ShowLoginInformations,
 	ShowNotes,
 	ShowFiles,
 	ShowContacts,
 	ShowPaymentCards,
-	
+
 	AddOrEditLoginInformation,
 	AddOrEditNote,
 	AddOrEditFile,
@@ -31,10 +35,18 @@ public enum VisibleElement
 	DeleteItemConfirmation,
 }
 
+public enum CommonSecretsFileFormat
+{
+	Unknown = -1,
+	Json = 0,
+	Xml
+}
+
 class Program
 {
-	private static bool isFileOpen = false;
-	private static bool isFileModified = false;
+	private static CommonSecretsFileFormat fileFormat = CommonSecretsFileFormat.Unknown;
+	private static bool isContainerOpen = false;
+	private static bool isContainerModified = false;
 
 	private static string fullFilePath = "";
 
@@ -56,7 +68,7 @@ class Program
 			new MenuBarItem("_File", new MenuItem [] {
 				new MenuItem("_New...", LocMan.Get("New CommonSecrets file..."), () =>
 				{
-					if (isFileOpen)
+					if (isContainerOpen)
 					{
 						if (TryToCloseFile())
 						{
@@ -71,20 +83,20 @@ class Program
 					Application.Run(createNew);
 				}),
 				new MenuItem("_Open...", LocMan.Get("Open existing CommonSecrets file..."), () => OpenCommonSecretsFile()),
-				new MenuItem("_Save", "Save CommonSecrets file", () => {}, () => isFileOpen),
-				new MenuItem("Save As...", "Save CommonSecrets file as...", () => SaveCommonSecretsFileAs(), () => isFileOpen),
+				new MenuItem("_Save", "Save CommonSecrets file", () => SaveCommonSecretsFile(), () => commonSecretsContainer != null && fileFormat != CommonSecretsFileFormat.Unknown),
+				new MenuItem("Save As...", "Save CommonSecrets file as...", () => SaveCommonSecretsFileAs(), () => commonSecretsContainer != null),
 				new MenuItem("_Close", "Close file", () => {
 					TryToCloseFile();
-				}, () => isFileOpen),
+				}, () => isContainerOpen),
 				new MenuItem("_Quit", "Quit", () => {
 					TryToQuit();
 				})
 			}),
 
 			new MenuBarItem("_Edit", new MenuItem[] {
-				new MenuItem("_Add...", "Add entry", () => {}, () => isFileOpen),
-				new MenuItem("_Duplicate...", "Duplicate entry", () => {}, () => isFileOpen),
-				new MenuItem("_Remove...", "Remove entry", () => {}, () => isFileOpen),
+				new MenuItem("_Add...", "Add entry", () => {}, () => isContainerOpen),
+				new MenuItem("_Duplicate...", "Duplicate entry", () => {}, () => isContainerOpen),
+				new MenuItem("_Remove...", "Remove entry", () => {}, () => isContainerOpen),
 			}),
 
 			new MenuBarItem("_Tools", new MenuItem[] {
@@ -285,26 +297,39 @@ class Program
 		};
 	}
 
+	private static readonly LoginInformation sampleLogin = new LoginInformation("Example", "https://example.com/", "dragon@example.com", "Dragon", Path.GetTempFileName().Replace(".", "!"));
+
 	private static void NewCommonSecretsCreated(KeyDerivationFunctionEntry keyDerivationFunctionEntry, string password)
 	{
-		// Derive password bytes, and store them into memory
-		ClearKnownDerivedPasswords();
-		byte[] derivedPassword = keyDerivationFunctionEntry.GeneratePasswordBytes(password);
-		AddKnownDerivedPassword(keyDerivationFunctionEntry.keyIdentifier, derivedPassword);
+		try
+		{
+			// Derive password bytes, and store them into memory
+			ClearKnownDerivedPasswords();
+			byte[] derivedPassword = keyDerivationFunctionEntry.GeneratePasswordBytes(password);
+			AddKnownDerivedPassword(keyDerivationFunctionEntry.keyIdentifier, derivedPassword);
 
-		// Create new container
-		commonSecretsContainer = new CommonSecretsContainer(keyDerivationFunctionEntry);
+			// Create new container
+			commonSecretsContainer = new CommonSecretsContainer(keyDerivationFunctionEntry);
+			string keyIdentifierString = Encoding.UTF8.GetString(keyDerivationFunctionEntry.keyIdentifier);
+			commonSecretsContainer.AddLoginInformationSecret(derivedPassword, sampleLogin, keyIdentifierString);
 
-		// Set state to unsaved
-		fullFilePath = "";
-		filename = defaultNameForNewFile;
-		isFileModified = true;
+			// Set state to unsaved
+			fullFilePath = "";
+			filename = defaultNameForNewFile;
+			isContainerModified = true;
+
+			fileFormat = CommonSecretsFileFormat.Unknown;
+		}
+		catch (Exception ex)
+		{
+			File.WriteAllText("ex.txt", ex.ToString());
+		}
 	}
 
 	private static void OpenCommonSecretsFile()
 	{
 		// Check if we have unmodified data before we try to open another file
-		if (isFileModified)
+		if (isContainerModified)
 		{
 			if (MessageBox.Query("Save modifications", "Do you want to save modifications?", "Yes", "Cancel") == 1)
 			{
@@ -319,20 +344,80 @@ class Program
 
 		if (!d.Canceled)
 		{
-			// Try to open the file in path
+			string absoluteFilePath = d.FilePaths[0];
+			// Try to open the file in path (only text serialization formats are supported for now)
+			string fileText = File.ReadAllText(absoluteFilePath);
 
-			// TODO: Check file format and try to deserialize it
+			// Check file format and try to deserialize it
+			foreach (char c in fileText)
+			{
+				if (Char.IsWhiteSpace(c))
+				{
+					continue;
+				}
 
-			// TODO: Ask for password(s)
+				if (c == '{')
+				{
+					// It should be JSON
+					commonSecretsContainer = JsonSerializer.Deserialize<CommonSecretsContainer>(fileText);
+					fileFormat = CommonSecretsFileFormat.Json;
+					break;
+				}
+				else if (c == '<')
+				{
+					// It should be XML
+					var xmlserializer = new XmlSerializer(typeof(CommonSecretsContainer));
+					using (XmlReader reader = XmlReader.Create(new StringReader(fileText)))
+					{
+						commonSecretsContainer = (CommonSecretsContainer?)xmlserializer.Deserialize(reader);
+					}
+					fileFormat = CommonSecretsFileFormat.Xml;
+				}
+				else
+				{
+					// TODO: Show error
+					return;
+				}
+			}
+
+			// If opening failed, return out (maybe show an error message?)
+			if (commonSecretsContainer == null)
+			{
+				fileFormat = CommonSecretsFileFormat.Unknown;
+				return;
+			}
+
+			// Ask for password(s)
+			if (commonSecretsContainer.keyDerivationFunctionEntries.Count < 1)
+			{
+				// Do not ask for passwords
+			}
+			else if (commonSecretsContainer.keyDerivationFunctionEntries.Count == 1)
+			{
+				// Ask for single password
+			}
+			else
+			{
+				// TODO: Ask for multiple passwords
+			}
 
 			// Success, fill UI things
-			fullFilePath = d.FilePaths[0];
+			fullFilePath = absoluteFilePath;
 			filename = Path.GetFileName(fullFilePath);
-			isFileModified = false;
+			isContainerModified = false;
 			ClearKnownDerivedPasswords();
 		}
 	}
 
+	private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions
+	{
+		// TODO: Maybe do some configuration for this?
+		WriteIndented = true
+	};
+
+	/// <summary>
+	/// Save CommonSecrets file with existing settings
+	/// </summary>
 	private static void SaveCommonSecretsFile()
 	{
 		// Use same serialization format as existing file
@@ -342,16 +427,27 @@ class Program
 		// Replace the old file with new one
 	}
 
+	/// <summary>
+	/// Save CommonSecrets file with settings that user chooses
+	/// </summary>
 	private static void SaveCommonSecretsFileAs()
 	{
-		var allowedSaveFileExtensions = new List<string>() { ".json", ".xml" };
+		var allowedSaveFileExtensions = new List<string>() { ".commonsecrets.json", ".commonsecrets.xml" };
 		var sd = new SaveDialog("Save file", "Choose the path where to save the file.", allowedSaveFileExtensions);
 		//sd.FilePath = System.IO.Path.Combine (sd.FilePath.ToString (), Win.Title.ToString ());
 		Application.Run(sd);
 
 		if (!sd.Canceled)
 		{
-			if (System.IO.File.Exists(sd.FilePath.ToString()))
+			string? absoluteFilePath = sd.FilePath.ToString();
+
+			if (string.IsNullOrWhiteSpace(absoluteFilePath))
+			{
+				// TODO: show error in here
+				return;
+			}
+
+			if (System.IO.File.Exists(absoluteFilePath))
 			{
 				if (MessageBox.Query("Save File", "File already exists. Overwrite it any way?", "No", "Ok") == 1)
 				{
@@ -365,6 +461,24 @@ class Program
 			else
 			{
 				// Create a new file
+				if (absoluteFilePath.EndsWith(".json"))
+				{
+					string json = JsonSerializer.Serialize(commonSecretsContainer, serializerOptions);
+					File.WriteAllText(absoluteFilePath, json);
+					fileFormat = CommonSecretsFileFormat.Json;
+				}
+				else if (absoluteFilePath.EndsWith(".xml"))
+				{
+					var xmlserializer = new XmlSerializer(typeof(CommonSecretsContainer));
+					var stringWriter = new StringWriter();
+					using (var writer = XmlWriter.Create(stringWriter))
+					{
+						xmlserializer.Serialize(writer, commonSecretsContainer);
+						string xml = stringWriter.ToString();
+						File.WriteAllText(absoluteFilePath, xml);
+					}
+					fileFormat = CommonSecretsFileFormat.Xml;
+				}
 			}
 		}
 		else
@@ -380,9 +494,10 @@ class Program
 	private static bool TryToCloseFile()
 	{
 		// Check if there are unsaved modifications
-		if (isFileModified)
+		if (isContainerModified)
 		{
-			if (MessageBox.Query("Save modifications", "Do you want to save modifications?", "Yes", "Cancel") == 1)
+			int pressedButton = MessageBox.Query("Save modifications", "Do you want to save modifications?", "Yes", "No", "Cancel");
+			if (pressedButton == 1)
 			{
 				ClearKnownDerivedPasswords();
 				// TODO: Do the actual save here
@@ -403,16 +518,17 @@ class Program
 	private static void TryToQuit()
 	{
 		// Check if there are unsaved modifications
-		if (isFileModified)
+		if (isContainerModified)
 		{
-			if (MessageBox.Query("Save modifications", "Do you want to save modifications?", "Yes", "Cancel") == 1)
+			int pressedButton = MessageBox.Query("Save modifications", "Do you want to save modifications?", "Yes", "No", "Cancel");
+			if (pressedButton == 1)
 			{
 				ClearKnownDerivedPasswords();
 				// TODO: Do the actual save here
 
 			}
 		}
-	
+
 		Application.RequestStop();
 	}
 
