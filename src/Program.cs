@@ -297,6 +297,11 @@ class Program
 		};
 	}
 
+	private static void SinglePasswordAsked(string password)
+	{
+		
+	}
+
 	private static readonly LoginInformation sampleLogin = new LoginInformation("Example", "https://example.com/", "dragon@example.com", "Dragon", Path.GetTempFileName().Replace(".", "!"));
 
 	private static void NewCommonSecretsCreated(KeyDerivationFunctionEntry keyDerivationFunctionEntry, string password)
@@ -395,6 +400,9 @@ class Program
 			else if (commonSecretsContainer.keyDerivationFunctionEntries.Count == 1)
 			{
 				// Ask for single password
+				string primaryKeyIdentifier = commonSecretsContainer.keyDerivationFunctionEntries[0].GetKeyIdentifier();
+				var askForSinglePassword = AskForSinglePasswordDialog.CreateAskForSinglePasswordDialog(primaryKeyIdentifier, SinglePasswordAsked, null);
+				Application.Run(askForSinglePassword);
 			}
 			else
 			{
