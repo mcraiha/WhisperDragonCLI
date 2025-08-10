@@ -299,7 +299,34 @@ class Program
 
 	private static void SinglePasswordAsked(string password)
 	{
-		
+		byte[] derivedPassword = commonSecretsContainer!.keyDerivationFunctionEntries[0].GeneratePasswordBytes(password);
+		(bool valid, Exception exception) = Helpers.CheckDerivedPassword(derivedPassword);
+
+		if (!valid)
+		{
+			// TODO: show error about incorrectly derived password
+		}
+
+		// Find first entry that is encrypted with given password
+		string wantedKeyIdentifier = commonSecretsContainer!.keyDerivationFunctionEntries[0].GetKeyIdentifier();
+		foreach (LoginInformationSecret loginInformationSecret in commonSecretsContainer.loginInformationSecrets)
+		{
+			if (loginInformationSecret.GetKeyIdentifier() == wantedKeyIdentifier && !loginInformationSecret.CanBeDecryptedWithDerivedPassword(derivedPassword))
+			{
+				// Show error and ask for password again
+				if (MessageBox.ErrorQuery("Incorrect password", "The password you typed was not correct. Do you want to try again?", "Cancel", "Try again") == 1)
+				{
+					string primaryKeyIdentifier = commonSecretsContainer.keyDerivationFunctionEntries[0].GetKeyIdentifier();
+					var askForSinglePassword = AskForSinglePasswordDialog.CreateAskForSinglePasswordDialog(primaryKeyIdentifier, SinglePasswordAsked, null);
+					Application.Run(askForSinglePassword);
+					return;
+				}
+			}
+		}
+
+		// Success
+		CommonSecretsPasswordStepCompleted(fileToOpenAbsolutePath);
+		AddKnownDerivedPassword(commonSecretsContainer!.keyDerivationFunctionEntries[0].keyIdentifier, derivedPassword);
 	}
 
 	private static readonly LoginInformation sampleLogin = new LoginInformation("Example", "https://example.com/", "dragon@example.com", "Dragon", Path.GetTempFileName().Replace(".", "!"));
@@ -331,6 +358,11 @@ class Program
 		}
 	}
 
+	/// <summary>
+	/// Absolute file path to file that should be opened after asking for password(s)
+	/// </summary>
+	private static string fileToOpenAbsolutePath = "";
+
 	private static void OpenCommonSecretsFile()
 	{
 		// Check if we have unmodified data before we try to open another file
@@ -341,7 +373,6 @@ class Program
 				// TODO: Do actual save
 			}
 		}
-
 
 		var allowedOpenFileExtensions = new List<string>() { ".json", ".xml" };
 		var d = new OpenDialog("Open", "Open a CommonSecrets file", allowedOpenFileExtensions) { AllowsMultipleSelection = false };
@@ -396,9 +427,12 @@ class Program
 			if (commonSecretsContainer.keyDerivationFunctionEntries.Count < 1)
 			{
 				// Do not ask for passwords
+				CommonSecretsPasswordStepCompleted(absoluteFilePath);
 			}
 			else if (commonSecretsContainer.keyDerivationFunctionEntries.Count == 1)
 			{
+				fileToOpenAbsolutePath = absoluteFilePath;
+
 				// Ask for single password
 				string primaryKeyIdentifier = commonSecretsContainer.keyDerivationFunctionEntries[0].GetKeyIdentifier();
 				var askForSinglePassword = AskForSinglePasswordDialog.CreateAskForSinglePasswordDialog(primaryKeyIdentifier, SinglePasswordAsked, null);
@@ -408,13 +442,15 @@ class Program
 			{
 				// TODO: Ask for multiple passwords
 			}
-
-			// Success, fill UI things
-			fullFilePath = absoluteFilePath;
-			filename = Path.GetFileName(fullFilePath);
-			isContainerModified = false;
-			ClearKnownDerivedPasswords();
 		}
+	}
+
+	private static void CommonSecretsPasswordStepCompleted(string absoluteFilePath)
+	{
+		fullFilePath = absoluteFilePath;
+		filename = Path.GetFileName(fullFilePath);
+		isContainerModified = false;
+		ClearKnownDerivedPasswords();
 	}
 
 	private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions
