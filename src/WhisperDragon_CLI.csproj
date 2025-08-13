@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Assets/BgAscii.txt" />
     <EmbeddedResource Include="CommonWords/English-Common.txt" />
   </ItemGroup>
 
