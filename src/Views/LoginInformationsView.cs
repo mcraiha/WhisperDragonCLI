@@ -19,11 +19,7 @@ public sealed class LoginInformationsView : View
 			dataTable.Columns.Add(columnName);
 		}
 
-		foreach (LoginSimplified ls in logins)
-		{
-			List<object> row = new List<object>() { ls.IsSecure, ls.Title, ls.URL, ls.Email, ls.Username, ls.Password };
-			dataTable.Rows.Add(row.ToArray());
-		}
+		SetLogins(logins);
 
 		TableView tableView = new TableView()
 		{
@@ -36,6 +32,16 @@ public sealed class LoginInformationsView : View
 		tableView.Table = dataTable;
 
 		Add(tableView);
+	}
+
+	public void SetLogins(List<LoginSimplified> logins)
+	{
+		dataTable.Rows.Clear();
+		foreach (LoginSimplified ls in logins)
+		{
+			List<object> row = new List<object>() { ls.IsSecure, ls.Title, ls.URL, ls.Email, ls.Username, ls.Password };
+			dataTable.Rows.Add(row.ToArray());
+		}
 	}
 
 	public void CopyURLToClipboard()
