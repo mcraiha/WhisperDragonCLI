@@ -60,6 +60,23 @@ public static class EmbedResourceLoader
 		return returnValue;
 	}
 
+	public static string ReadAsString(string resourceToLoad)
+	{
+		List<string> returnValue = new List<string>();
+
+		Stream? namesStream = LoadResourceStream(resourceToLoad, typeof(EmbedResourceLoader).GetTypeInfo().Assembly);
+
+		if (namesStream == null)
+		{
+			throw new FileNotFoundException($"Could not find resource with name: {resourceToLoad}");
+		}
+
+		using (StreamReader sr = new StreamReader(namesStream))
+		{
+			return sr.ReadToEnd();
+		}
+	}
+
 	private static Stream? LoadResourceStream(string resourceName, Assembly assembly)
 	{
 		string properResourceName = GetResourceName(assembly, resourceName);
