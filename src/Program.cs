@@ -129,7 +129,7 @@ class Program
 		};
 
 		statusBar = new StatusBar(GetStatusItems(VisibleElement.ShowLoginInformations));
-
+		/*
 		//LoginInformationsWindow.CreateLoginInformationsDialog(win);
 		TabView tabView = new TabView()
 		{
@@ -151,7 +151,19 @@ class Program
 			TabWithId selectedTab = (TabWithId)tabChangedEventArgs.NewTab;
 			statusBar.Items = GetStatusItems(selectedTab.GetTabType());
 		};
-		win.Add(tabView);
+		*/
+		//win.Add(tabView);
+
+		TextView tv = new TextView()
+		{
+			X = 0,
+			Y = 0,
+			Width = Dim.Fill(),
+			Height = Dim.Fill(1)
+		};
+		tv.ReadOnly = true;
+		tv.Text = EmbedResourceLoader.ReadAsString("Assets/BgAscii.txt");
+		win.Add(tv);
 
 		// Add both menu and win in a single call
 		Application.Top.Add(menu, win, statusBar);
@@ -351,6 +363,8 @@ class Program
 			isContainerModified = true;
 
 			fileFormat = CommonSecretsFileFormat.Unknown;
+
+			//loginsTab.GetView().set
 		}
 		catch (Exception ex)
 		{
